@@ -69,13 +69,17 @@
   }
 }
 
-/* Matrix character rain - multiple speeds */
 @keyframes matrix-fall-slow {
   0% { transform: translateY(-100vh); opacity: 1; }
   100% { transform: translateY(100vh); opacity: 0; }
 }
 
 @keyframes matrix-fall-fast {
+  0% { transform: translateY(-100vh); opacity: 1; }
+  100% { transform: translateY(100vh); opacity: 0; }
+}
+
+@keyframes matrix-fall-medium {
   0% { transform: translateY(-100vh); opacity: 1; }
   100% { transform: translateY(100vh); opacity: 0; }
 }
@@ -123,27 +127,134 @@ body {
   overflow-x: hidden;
 }
 
-/* Matrix background rain effect */
+/* Matrix background rain effect - FAST column */
 body::after {
-  content: '01ｦﾞﾎﾆﾕﾎﾞﾌﾞﾔﾅﾟﾆﾛﾒﾈﾟﾌ01ｦﾞﾎﾆﾕﾎﾞﾌﾞﾔﾅﾟﾆﾛﾒﾈﾟﾌ01ｦﾞﾎﾆﾕﾎﾞﾌﾞﾔﾅﾟﾆﾛﾒﾈﾟﾌ';
+  content: '0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ\A 0\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ﾞ';
   position: fixed;
   top: 0;
-  left: 0;
-  width: 100%;
+  left: 5%;
+  width: 15%;
   height: 100%;
-  font-size: 20px;
-  color: rgba(16, 185, 129, 0.1);
-  white-space: pre-wrap;
-  word-wrap: break-word;
+  font-size: 18px;
+  font-family: "Syne Mono", monospace;
+  font-weight: bold;
+  color: rgba(16, 185, 129, 0.45);
+  white-space: pre;
   pointer-events: none;
   z-index: 0;
   overflow: hidden;
-  line-height: 1.5;
-  animation: matrix-fall-slow 15s linear infinite;
+  line-height: 2.2;
+  animation: matrix-fall-fast 14s linear infinite;
+  text-shadow: 0 0 20px rgba(16, 185, 129, 0.5), 0 0 40px rgba(16, 185, 129, 0.2);
+}
+
+/* Matrix background rain effect - SLOW column */
+body::before {
+  content: '1\A ｦ\A 0\A ﾞ\A 1\A ｦ\A 0\A ﾎ\A 1\A ｦ\A 0\A ﾞ\A 1\A ｦ\A 0\A ﾎ\A 1\A ｦ\A 0\A ﾞ\A 1\A ｦ\A 0\A ﾎ\A 1\A ｦ\A 0\A ﾞ\A 1\A ｦ\A 0\A ﾎ\A 1\A ｦ\A 0\A ﾞ\A 1\A ｦ\A 0\A ﾎ\A 1\A ｦ\A 0\A ﾞ\A 1\A ｦ\A 0\A ﾎ\A 1\A ｦ\A 0\A ﾞ';
+  position: fixed;
+  top: 0;
+  right: 8%;
+  width: 12%;
+  height: 100%;
+  font-size: 20px;
+  font-family: "Syne Mono", monospace;
+  font-weight: bold;
+  color: rgba(6, 182, 212, 0.4);
+  white-space: pre;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 2.4;
+  animation: matrix-fall-slow 19s linear infinite;
+  text-shadow: 0 0 18px rgba(6, 182, 212, 0.5), 0 0 35px rgba(6, 182, 212, 0.2);
+}
+
+/* Matrix background rain - MEDIUM column 1 */
+html::before {
+  content: '0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ\A 0\A ﾎ\A 1\A ｦ\A ﾞ';
+  position: fixed;
+  top: 0;
+  left: 25%;
+  width: 8%;
+  height: 100%;
+  font-size: 16px;
+  font-family: "Syne Mono", monospace;
+  font-weight: bold;
+  color: rgba(16, 185, 129, 0.35);
+  white-space: pre;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 1.8;
+  animation: matrix-fall-fast 16s linear infinite;
+  text-shadow: 0 0 18px rgba(16, 185, 129, 0.4), 0 0 30px rgba(16, 185, 129, 0.15);
+}
+
+/* Matrix background rain - MEDIUM column 2 */
+html::after {
+  content: '1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ\A 1\A 0\A ｦ\A ﾎ';
+  position: fixed;
+  top: 0;
+  left: 42%;
+  width: 8%;
+  height: 100%;
+  font-size: 18px;
+  font-family: "Syne Mono", monospace;
+  font-weight: bold;
+  color: rgba(6, 182, 212, 0.36);
+  white-space: pre;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 1.85;
+  animation: matrix-fall-medium 17s linear infinite;
+  text-shadow: 0 0 16px rgba(6, 182, 212, 0.42), 0 0 32px rgba(6, 182, 212, 0.18);
+}
+
+/* Matrix background rain - FAST column 3 */
+main::before {
+  content: '0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ\A 0\A 1\A ｦ';
+  position: fixed;
+  top: 0;
+  left: 15%;
+  width: 7%;
+  height: 100%;
+  font-size: 16px;
+  font-family: "Syne Mono", monospace;
+  font-weight: bold;
+  color: rgba(16, 185, 129, 0.32);
+  white-space: pre;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 1.75;
+  animation: matrix-fall-fast 13s linear infinite;
+  text-shadow: 0 0 17px rgba(16, 185, 129, 0.38);
+}
+
+/* Matrix background rain - SLOW column 4 */
+main::after {
+  content: 'ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0\A ﾞ\A 1\A 0';
+  position: fixed;
+  top: 0;
+  left: 68%;
+  width: 7%;
+  height: 100%;
+  font-size: 18px;
+  font-family: "Syne Mono", monospace;
+  font-weight: bold;
+  color: rgba(6, 182, 212, 0.33);
+  white-space: pre;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  line-height: 1.9;
+  animation: matrix-fall-slow 21s linear infinite;
+  text-shadow: 0 0 17px rgba(6, 182, 212, 0.44);
 }
 
 /* Subtle scanline effect overlay */
-body::before {
+.scanlines {
   content: '';
   position: fixed;
   top: 0;
