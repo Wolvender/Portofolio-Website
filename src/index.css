@@ -1,49 +1,185 @@
-@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
-@import "tailwindcss";
-
+/* ===== PROJECT SECTION ===== */
 :root {
-  --bg: #0a0a0a;
-  --surface: #0f0f0f;
-  --text: #f5f5f5;
-  --muted: #a3a3a3;
-  --accent: #fb923c;
-  --accent-hover: #ea580c;
-  --accent-text: #000000;
-  --bordercolor: #2b2b2b;
-
-  --overlay: rgba(0, 0, 0, 0.6);
-  --overlay-hover: rgba(0, 0, 0, 0.8);
-
-  --radius-sm: 0.375rem;
-  --radius-md: 0.75rem;
-  --radius-lg: 1rem;
-  
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.4);
-  --shadow-lg: 0 10px 30px rgba(251, 146, 60, 0.1);
-  
-  --font-main: "Roboto", sans-serif; 
+  /* color system for the site */
+  --bg: #071018; /* page background (dark) */
+  --surface: #0f1724; /* surface panels */
+  --text: #e6eef8; /* primary text */
+  --text-main: #e6eef8;
+  --text-muted: rgba(230,238,248,0.72);
+  --bordercolor: rgba(255,255,255,0.06);
+  --accent: #38bdf8;
+  --accent-soft: rgba(56,189,248,0.18);
 }
 
-body {
-  background: var(--bg);
+.projects {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 4rem;
+}
+
+/* ===== PROJECT CARD ===== */
+.project-card {
+  position: relative;
+  padding: 2rem;
+  border-radius: 18px;
+  text-decoration: none;
+  color: var(--text-main);
+
+  background: linear-gradient(
+    135deg,
+    rgba(56, 189, 248, 0.12),
+    rgba(2, 6, 23, 0.85)
+  );
+
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(56, 189, 248, 0.18);
+
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.6),
+    inset 0 0 0 rgba(56, 189, 248, 0);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border 0.35s ease;
+}
+
+/* ===== DARK / RED VARIANT (usable via adding `dark` class to a card) ===== */
+.project-card.dark,
+.project-card.variant-dark {
+  background: linear-gradient(135deg, rgba(6,6,6,0.85), rgba(18,18,18,0.98));
+  color: #fafafa;
+  border: 1px solid rgba(48,48,48,0.95); /* dark gray outline */
+  box-shadow:
+    0 8px 30px rgba(0,0,0,0.85),
+    inset 0 0 0 rgba(239,68,68,0);
+  --accent: #ef4444; /* red accent */
+  --accent-soft: rgba(239,68,68,0.28);
+}
+
+/* Subtle variant for list/sidebar items */
+.project-card.dark.small {
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+/* ===== GLOW AURA ===== */
+.project-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: inherit;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    var(--accent),
+    transparent
+  );
+  opacity: 0;
+  filter: blur(22px);
+  transition: opacity 0.35s ease;
+  z-index: -1;
+}
+
+/* ===== HOVER EFFECT ===== */
+.project-card:hover {
+  transform: translateY(-10px) scale(1.05);
+  box-shadow:
+    0 0 45px var(--accent-soft),
+    0 40px 80px rgba(0, 0, 0, 0.75);
+  border-color: var(--accent);
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+/* ===== CLICK FEEDBACK ===== */
+.project-card:active {
+  transform: scale(0.98);
+}
+
+/* ===== TEXT ===== */
+.project-card h3 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  /* Gradient text when supported; fall back to accent color otherwise */
+  background: linear-gradient(90deg, #e5e7eb, var(--accent));
+  color: var(--accent); /* fallback for browsers that don't support background-clip:text */
+  background-clip: text;
+  -webkit-background-clip: text;
+  /* Use transparent fill on WebKit browsers to reveal the background gradient */
+  -webkit-text-fill-color: transparent;
+}
+
+/* Preferentially apply gradient text only where the browser supports it */
+@supports ((-webkit-background-clip: text) or (background-clip: text)) {
+  .project-card h3 { color: transparent; }
+}
+
+.project-card p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ===== ADDITIONAL COLOR VARIANTS (expand as needed) ===== */
+.project-card:nth-child(1) { --accent: #38bdf8; --accent-soft: rgba(56,189,248,0.3); }
+.project-card:nth-child(2) { --accent: #10b981; --accent-soft: rgba(16,185,129,0.3); }
+.project-card:nth-child(3) { --accent: #8b5cf6; --accent-soft: rgba(139,92,246,0.3); }
+.project-card:nth-child(4) { --accent: #f59e0b; --accent-soft: rgba(245,158,11,0.3); }
+.project-card:nth-child(5) { --accent: #ef4444; --accent-soft: rgba(239,68,68,0.3); }
+/* fallback red/black look for later cards */
+.project-card:nth-child(6) { --accent: #ef4444; --accent-soft: rgba(239,68,68,0.28); background: linear-gradient(135deg, rgba(8,8,8,0.7), rgba(24,24,24,0.95)); border: 1px solid rgba(40,40,40,0.9); color: #f7f7f7; }
+
+/* Utility: when using a sidebar list, tighten spacing */
+.projects.sidebar { display: flex; flex-direction: column; gap: 0.75rem; }
+
+/* Make sure dark cards still show readable muted text */
+.project-card.dark p { color: rgba(255,255,255,0.72); }
+.project-card.dark h3 { background: linear-gradient(90deg, #ffffff, var(--accent)); }
+
+/* ===== TOP HOVER BAR + LEFT SIDEBAR TRIGGERS ===== */
+.top-trigger {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 48px; /* trigger area height */
+  pointer-events: none; /* allow only inner children to receive events */
+  z-index: 60;
+}
+/* Simplified top header with clickable boxes */
+.site-top { position: sticky; top: 0; z-index: 1000; background: transparent; padding: 12px 0; }
+.header-top { position: sticky; top: 0; z-index: 1000; }
+.top-boxes { display: flex; gap: 12px; justify-content: center; }
+.top-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 120px;
+  padding: 10px 18px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
   color: var(--text);
-  font-family: var(--font-main);
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,0.04);
+  transition: transform 160ms ease, background 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+.top-box:hover { background: rgba(239,68,68,0.12); border-color: rgba(239,68,68,0.6); color: var(--accent); transform: translateY(-3px); }
+.top-box:active { transform: translateY(0); }
+
+/* sidebar removed per user request - styles above deleted */
+
+.sidebar-header h4 { color: var(--text); margin: 0 0 0.5rem 0; }
+.sidebar-list { padding: 0; margin: 0; display: flex; flex-direction: column; }
+.sidebar .project-card { margin-bottom: 0.75rem; }
+.sidebar .project-card.small { padding: 0.75rem 1rem; border-radius: 12px; }
+
+/* ensure main content shifts (optional) when sidebar visible on large screens */
+@media (min-width: 1024px) {
+  .left-trigger:hover ~ main { margin-left: 320px; transition: margin-left 260ms ease; }
 }
 
-.container {
-  max-width: 80rem;
-  margin-left: auto;
-  margin-right: auto;
-}
-
-.tag {
-  display: inline-block;
-  font-size: 0.75rem;
-  padding: 0.375rem 0.75rem;
-  background: rgba(251, 146, 60, 0.1);
-  color: var(--accent);
-  border: 1px solid rgba(251, 146, 60, 0.2);
-  border-radius: 999px;
-  font-weight: 500;
-}
