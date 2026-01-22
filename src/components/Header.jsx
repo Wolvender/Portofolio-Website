@@ -1,4 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
+import { siteConfig } from "../siteConfig";
 
 export default function Header() {
   const location = useLocation();
@@ -19,33 +20,25 @@ export default function Header() {
   return (
     <header className="sticky top-0 z-50 bg-(--surface) border-b border-(--bordercolor)">
       <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Logo / Site naam */}
-        <Link 
-          to="/" 
+        {/* Projects link on LEFT */}
+        <Link
+          to="/"
           onClick={scrollToTop}
-          className="text-xl font-bold text-(--accent) hover:opacity-80 transition-opacity"
+          className={`transition-colors text-sm ${
+            isActive("/") 
+              ? "text-(--accent) font-semibold" 
+              : "text-(--muted) hover:text-(--text)"
+          }`}
         >
-          Portfolio
+          Projects
         </Link>
 
-        {/* Navigatie links */}
+        {/* About and Contact on RIGHT */}
         <div className="flex gap-6">
-          <Link
-            to="/"
-            onClick={scrollToTop}
-            className={`transition-colors ${
-              isActive("/") 
-                ? "text-(--accent) font-semibold" 
-                : "text-(--muted) hover:text-(--text)"
-            }`}
-          >
-            Projects
-          </Link>
-
           <Link
             to="/about"
             onClick={scrollToTop}
-            className={`transition-colors ${
+            className={`transition-colors text-sm ${
               isActive("/about") 
                 ? "text-(--accent) font-semibold" 
                 : "text-(--muted) hover:text-(--text)"
@@ -57,7 +50,7 @@ export default function Header() {
           <Link
             to="/contact"
             onClick={scrollToTop}
-            className={`transition-colors ${
+            className={`transition-colors text-sm ${
               isActive("/contact") 
                 ? "text-(--accent) font-semibold" 
                 : "text-(--muted) hover:text-(--text)"
@@ -70,3 +63,4 @@ export default function Header() {
     </header>
   );
 }
+
