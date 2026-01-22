@@ -1,29 +1,28 @@
+import { LinkedIn } from "./components/Icons/icons";
+
 export const siteConfig = {
-  name: "Jane Doe",
-  role: "XR Developer",
-  tagline: "Ik bouw interactieve XR-ervaringen die zich natuurlijk en intuïtief aanvoelen.",
-  aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=portfolio",
+  name: "Senna van Maren",
+  role: "Creative Software Developer",
+  tagline: "Ik creëer immersieve spelwerelden en interactieve simulaties met cutting-edge technologie.",
+  aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=senna",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
   socials: {
-    email: "jane.doe@example.com",
-    github: "https://github.com/",
-    linkedin: "https://linkedin.com/",
-    itch: "https://itch.io/",
+    email: "senna.vanmaren@gmail.com",
+    github: "https://github.com/Wolvender",
+    linkedin: "https://www.linkedin.com/in/sennavanmaren/",
+    itch: "https://wolv3nder.itch.io",
   },
 
   aboutLong: `
-    Ik ben een XR Developer die energie krijgt van het bouwen van interactieve, 
-    fysieke en intuïtieve ervaringen in VR en AR. Voor mij draait goede XR niet 
-    alleen om technologie, maar vooral om hoe gebruikers een digitale wereld 
-    *voelen*. Ik werk graag iteratief met prototypes: snel testen, verbeteren en 
-    opnieuw testen — net zo lang tot interacties natuurlijk en prettig aanvoelen.
+    Ik ben een Creative Software Developer gespecialiseerd in de ontwikkeling van games en interactieve simulaties. Met diepgaande ervaring in Unreal Engine en Unity, bouw ik complexe digitale werelden die gebruikers volledig inmers en.
 
-    Ik ga deze tekst aanpassen en een stuk persoonlijker maken door ook iets leuks
-    over mijzelf te vertellen!
+    Mijn technische expertise omvat meerdere programmeertalen en game development frameworks. Ik ben gelijk comfortabel met C# en Python voor backend logic als met JavaScript voor webgebaseerde projecten. Wat mij onderscheidt is mijn vermogen om technische complexiteit om te zetten in naadloze, intuïtieve gebruikerservaringen.
+
+    Ik geloof dat de beste games en simulaties ontstaan wanneer creatieve visie samenkomt met solide technische implementatie. Ik werk graag samen met teams om van concept tot volledig product te gaan, altijd met aandacht voor performantie, gebruikservaring en visuele kwaliteit.
   `,
 
-  softSkills: ["Samenwerken met artists", "Feedback geven & ontvangen", "Probleemoplossend denken"],
+  softSkills: ["Creatief probleemoplossen", "Teamwerk & Samenwerking", "Iteratief design", "Communicatie", "Project management"],
 
-  hardSkills: ["Unity & XR Interaction Toolkit", "C# Scripting", "Git & Version Control"],
+  hardSkills: ["Unreal Engine", "Unity", "C#", "Python", "JavaScript", "Game Development"],
 };
