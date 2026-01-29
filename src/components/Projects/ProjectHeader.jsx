@@ -38,7 +38,7 @@ export default function ProjectHeader({ project }) {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="text-6xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-tight"
+            className="text-4xl md:text-8xl font-bold text-white mb-6 tracking-tight leading-tight"
           >
             {project.title}
           </motion.h1>

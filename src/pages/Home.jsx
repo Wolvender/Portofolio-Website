@@ -24,7 +24,7 @@ export default function Home() {
           </p>
 
           {/* Main Heading */}
-          <h1 className="text-6xl md:text-7xl font-bold text-(--text) mb-6 leading-tight">
+          <h1 className="text-4xl md:text-7xl font-bold text-(--text) mb-6 leading-tight">
             Creative Software Developer
             <br />
             <span className="text-(--accent)">Building Experiences</span>

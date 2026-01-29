@@ -422,6 +422,7 @@ main::after {
   -webkit-backdrop-filter: blur(20px);
   border-bottom: 1px solid rgba(16, 185, 129, 0.1);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  will-change: padding, background-color;
 }
 
 /* Nav Link Hover Effect */

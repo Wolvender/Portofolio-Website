@@ -46,7 +46,7 @@ export default function ProjectInfo({ project }) {
 
           {/* Action buttons - shown if links exist */}
           {(project.git || project.itch) && (
-            <div className="mt-4 flex gap-2 justify-end">
+            <div className="mt-4 flex gap-2 justify-start md:justify-end">
               {project.git && (
                 <a href={project.git} target="_blank" rel="noopener noreferrer"
                   className="px-3 py-2 bg-(--surface) border border-(--bordercolor) rounded-lg 

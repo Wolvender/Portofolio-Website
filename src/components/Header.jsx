@@ -8,9 +8,18 @@ export default function Header() {
 
   // Track scroll position for header shrinking effect
   useEffect(() => {
+    let ticking = false;
+
     const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          setScrolled(window.scrollY > 20);
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -29,52 +38,47 @@ export default function Header() {
   };
 
   return (
-    <header className={`glass-header sticky top-0 z-50 transition-all duration-300 ${
-      scrolled ? 'py-2' : 'py-4'
-    }`}>
+    <header className={`glass-header sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'
+      }`}>
       <nav className="container mx-auto px-6 flex items-center justify-between">
         {/* Left Navigation */}
         <div className="flex gap-8 flex-1">
           <Link
             to="/"
             onClick={scrollToTop}
-            className={`nav-link transition-all duration-300 text-sm font-medium ${
-              isActive("/") 
-                ? "text-(--accent)" 
+            className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/")
+                ? "text-(--accent)"
                 : "text-(--muted) hover:text-(--text)"
-            }`}
+              }`}
           >
             Projects
           </Link>
           <Link
             to="/about"
             onClick={scrollToTop}
-            className={`nav-link transition-all duration-300 text-sm font-medium ${
-              isActive("/about") 
-                ? "text-(--accent)" 
+            className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/about")
+                ? "text-(--accent)"
                 : "text-(--muted) hover:text-(--text)"
-            }`}
+              }`}
           >
             About
           </Link>
         </div>
 
         {/* Center Logo/Name */}
-        <Link 
-          to="/" 
+        <Link
+          to="/"
           onClick={scrollToTop}
           className="flex items-center gap-3 group"
         >
           <img
             src={siteConfig.aboutImage}
             alt={siteConfig.name}
-            className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${
-              scrolled ? 'w-8 h-8' : 'w-10 h-10'
-            } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
+            className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${scrolled ? 'w-8 h-8' : 'w-10 h-10'
+              } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
           />
-          <span className={`font-bold text-(--text) transition-all duration-300 ${
-            scrolled ? 'text-base' : 'text-lg'
-          } group-hover:text-(--accent)`}>
+          <span className={`font-bold text-(--text) transition-all duration-300 ${scrolled ? 'text-base' : 'text-lg'
+            } group-hover:text-(--accent)`}>
             {siteConfig.name}
           </span>
         </Link>
@@ -84,11 +88,10 @@ export default function Header() {
           <Link
             to="/contact"
             onClick={scrollToTop}
-            className={`nav-link transition-all duration-300 text-sm font-medium ${
-              isActive("/contact") 
-                ? "text-(--accent)" 
+            className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/contact")
+                ? "text-(--accent)"
                 : "text-(--muted) hover:text-(--text)"
-            }`}
+              }`}
           >
             Contact
           </Link>
