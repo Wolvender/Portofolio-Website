@@ -55,82 +55,85 @@ export default function Header() {
     <>
       <header className={`glass-header sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'
         }`}>
-        <nav className="container mx-auto px-6 flex items-center justify-between relative">
+        <nav className="container mx-auto px-6 grid grid-cols-3 items-center relative">
 
-          {/* Mobile Menu Button - Left Aligned on Mobile */}
-          <button
-            className="md:hidden text-(--text) p-1"
-            onClick={() => setMobileMenuOpen(true)}
-          >
-            <Menu className="w-6 h-6" />
-          </button>
+          {/* Left Section: Mobile Menu Button OR Desktop Nav */}
+          <div className="flex justify-start">
+            <button
+              className="lg:hidden text-(--text) p-1"
+              onClick={() => setMobileMenuOpen(true)}
+            >
+              <Menu className="w-6 h-6" />
+            </button>
 
-          {/* Left Navigation (Desktop) */}
-          <div className="hidden md:flex gap-8 flex-1">
+            <div className="hidden lg:flex gap-8">
+              <Link
+                to="/"
+                onClick={scrollToTop}
+                className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/")
+                    ? "text-(--accent)"
+                    : "text-(--muted) hover:text-(--text)"
+                  }`}
+              >
+                Projects
+              </Link>
+              <Link
+                to="/about"
+                onClick={scrollToTop}
+                className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/about")
+                    ? "text-(--accent)"
+                    : "text-(--muted) hover:text-(--text)"
+                  }`}
+              >
+                About
+              </Link>
+            </div>
+          </div>
+
+          {/* Center Section: Logo */}
+          <div className="flex justify-center">
             <Link
               to="/"
               onClick={scrollToTop}
-              className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/")
-                  ? "text-(--accent)"
-                  : "text-(--muted) hover:text-(--text)"
-                }`}
+              className="flex items-center gap-3 group"
             >
-              Projects
-            </Link>
-            <Link
-              to="/about"
-              onClick={scrollToTop}
-              className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/about")
-                  ? "text-(--accent)"
-                  : "text-(--muted) hover:text-(--text)"
-                }`}
-            >
-              About
+              <img
+                src={siteConfig.aboutImage}
+                alt={siteConfig.name}
+                className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${scrolled ? 'w-8 h-8' : 'w-10 h-10'
+                  } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
+              />
+              <span className={`font-bold text-(--text) transition-all duration-300 hidden lg:block ${scrolled ? 'text-base' : 'text-lg'
+                } group-hover:text-(--accent)`}>
+                {siteConfig.name}
+              </span>
             </Link>
           </div>
 
-          {/* Center Logo/Name */}
-          <Link
-            to="/"
-            onClick={scrollToTop}
-            className="flex items-center gap-3 group absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0"
-          >
-            <img
-              src={siteConfig.aboutImage}
-              alt={siteConfig.name}
-              className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${scrolled ? 'w-8 h-8' : 'w-10 h-10'
-                } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
-            />
-            <span className={`font-bold text-(--text) transition-all duration-300 hidden md:block ${scrolled ? 'text-base' : 'text-lg'
-              } group-hover:text-(--accent)`}>
-              {siteConfig.name}
-            </span>
-          </Link>
-
-          {/* Right Navigation (Desktop) */}
-          <div className="hidden md:flex gap-8 flex-1 justify-end">
-            <Link
-              to="/contact"
-              onClick={scrollToTop}
-              className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/contact")
-                  ? "text-(--accent)"
-                  : "text-(--muted) hover:text-(--text)"
-                }`}
-            >
-              Contact
-            </Link>
-            <a
-              href={siteConfig.socials.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="nav-link transition-all duration-300 text-sm font-medium text-(--muted) hover:text-(--text)"
-            >
-              GitHub
-            </a>
+          {/* Right Section: Desktop Nav OR Spacer */}
+          <div className="flex justify-end">
+            <div className="hidden lg:flex gap-8">
+              <Link
+                to="/contact"
+                onClick={scrollToTop}
+                className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/contact")
+                    ? "text-(--accent)"
+                    : "text-(--muted) hover:text-(--text)"
+                  }`}
+              >
+                Contact
+              </Link>
+              <a
+                href={siteConfig.socials.github}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="nav-link transition-all duration-300 text-sm font-medium text-(--muted) hover:text-(--text)"
+              >
+                GitHub
+              </a>
+            </div>
           </div>
 
-          {/* Mobile Placeholder for Balance */}
-          <div className="w-6 md:hidden"></div>
         </nav>
       </header>
 
@@ -138,10 +141,11 @@ export default function Header() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-[60] bg-(--bg) bg-opacity-95 backdrop-blur-xl md:hidden flex flex-col items-center justify-center space-y-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 z-[60] bg-(--bg) bg-opacity-95 backdrop-blur-xl lg:hidden flex flex-col items-center justify-center space-y-8"
           >
             <button
               className="absolute top-6 right-6 text-(--muted) hover:text-(--text)"
