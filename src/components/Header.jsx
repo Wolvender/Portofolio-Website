@@ -71,8 +71,8 @@ export default function Header() {
                 to="/"
                 onClick={scrollToTop}
                 className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/")
-                    ? "text-(--accent)"
-                    : "text-(--muted) hover:text-(--text)"
+                  ? "text-(--accent)"
+                  : "text-(--muted) hover:text-(--text)"
                   }`}
               >
                 Projects
@@ -81,8 +81,8 @@ export default function Header() {
                 to="/about"
                 onClick={scrollToTop}
                 className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/about")
-                    ? "text-(--accent)"
-                    : "text-(--muted) hover:text-(--text)"
+                  ? "text-(--accent)"
+                  : "text-(--muted) hover:text-(--text)"
                   }`}
               >
                 About
@@ -117,8 +117,8 @@ export default function Header() {
                 to="/contact"
                 onClick={scrollToTop}
                 className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/contact")
-                    ? "text-(--accent)"
-                    : "text-(--muted) hover:text-(--text)"
+                  ? "text-(--accent)"
+                  : "text-(--muted) hover:text-(--text)"
                   }`}
               >
                 Contact
@@ -147,12 +147,17 @@ export default function Header() {
             transition={{ duration: 0.2 }}
             className="fixed inset-0 z-[60] bg-(--bg) bg-opacity-95 backdrop-blur-xl lg:hidden flex flex-col items-center justify-center space-y-8"
           >
-            <button
-              className="absolute top-6 right-6 text-(--muted) hover:text-(--text)"
-              onClick={() => setMobileMenuOpen(false)}
-            >
-              <X className="w-8 h-8" />
-            </button>
+            {/* Close Button - Aligned with Header */}
+            <div className="absolute top-0 left-0 w-full p-4">
+              <div className="container mx-auto px-2">
+                <button
+                  className="text-(--muted) hover:text-(--text) p-1"
+                  onClick={() => setMobileMenuOpen(false)}
+                >
+                  <X className="w-8 h-8" />
+                </button>
+              </div>
+            </div>
 
             {navLinks.map((link) => (
               <Link
