@@ -3,7 +3,6 @@ import { LinkedIn } from "./components/Icons/icons";
 export const siteConfig = {
   name: "Senna van Maren",
   role: "Creative Software Developer",
-  tagline: "Ik creëer immersieve spelwerelden en interactieve simulaties met cutting-edge technologie.",
   aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=senna",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
@@ -15,14 +14,14 @@ export const siteConfig = {
   },
 
   aboutLong: `
-    Ik ben een Creative Software Developer gespecialiseerd in de ontwikkeling van games en interactieve simulaties. Met diepgaande ervaring in Unreal Engine en Unity, bouw ik complexe digitale werelden die gebruikers volledig inmers en.
+    I am a Creative Software Developer specialized in developing games and interactive simulations. With deep experience in Unreal Engine and Unity, I build complex digital worlds that fully immerse users.
 
-    Mijn technische expertise omvat meerdere programmeertalen en game development frameworks. Ik ben gelijk comfortabel met C# en Python voor backend logic als met JavaScript voor webgebaseerde projecten. Wat mij onderscheidt is mijn vermogen om technische complexiteit om te zetten in naadloze, intuïtieve gebruikerservaringen.
+    My technical expertise encompasses multiple programming languages and game development frameworks. I am equally comfortable with C# and Python for backend logic as with JavaScript for web-based projects. What sets me apart is my ability to translate technical complexity into seamless, intuitive user experiences.
 
-    Ik geloof dat de beste games en simulaties ontstaan wanneer creatieve visie samenkomt met solide technische implementatie. Ik werk graag samen met teams om van concept tot volledig product te gaan, altijd met aandacht voor performantie, gebruikservaring en visuele kwaliteit.
+    I believe the best games and simulations emerge when creative vision meets solid technical implementation. I enjoy working with teams to go from concept to full product, always focusing on performance, user experience, and visual quality.
   `,
 
-  softSkills: ["Creatief probleemoplossen", "Teamwerk & Samenwerking", "Iteratief design", "Communicatie", "Project management"],
+  softSkills: ["Creative Problem Solving", "Teamwork & Collaboration", "Iterative Design", "Communication", "Project Management"],
 
   hardSkills: ["Unreal Engine", "Unity", "C#", "Python", "JavaScript", "Game Development"],
 };

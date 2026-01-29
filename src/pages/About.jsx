@@ -11,7 +11,7 @@ export default function About() {
   return (
     <div className="py-12 px-4">
       <div className="text-center mb-12">
-        <h1 className="text-5xl font-bold text-(--text) mb-4">Over mij</h1>
+        <h1 className="text-5xl font-bold text-(--text) mb-4">About Me</h1>
         <p className="text-xl text-(--muted) max-w-2xl mx-auto">{siteConfig.tagline}</p>
       </div>
 
@@ -56,7 +56,7 @@ export default function About() {
           <div className="flex flex-col gap-8 lg:flex-2">
             {/* Bio */}
             <section className="bg-(--surface) border border-(--bordercolor) rounded-lg p-8">
-              <h2 className="text-2xl font-semibold text-(--text) mb-6">Mijn Verhaal</h2>
+              <h2 className="text-2xl font-semibold text-(--text) mb-6">My Story</h2>
               <div className="space-y-4">
                 {paragraphs.map((text, i) => (
                   <p key={i} className="text-(--muted) leading-relaxed">

@@ -1,177 +1,173 @@
 {
   "projects": [
     {
-      "id": "asteroids-3d",
-      "title": "Asteroids 3D",
-      "tagline": "Een moderne 3D-remake van de arcade klassieker.",
-      "description": "Asteroids 3D is een moderne remake van de klassieke arcade game. Het doel was om physics-based movement te combineren met een minimalistische sci-fi stijl. Door veel playtesting vond ik de perfecte balans tussen thrust force, rotation speed en projectile velocity.\n\nTijdens het project focuste ik op iteratief werken en het snel ontwikkelen van speelbare prototypes. Daarbij heb ik veel geleerd over component-based architecture, het gebruik van ScriptableObjects voor game balancing en het implementeren van object pooling voor betere performance.",
-      "thumbnail": "https://picsum.photos/seed/asteroids/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "id": "replay-platformer",
+      "title": "Replay Platformer",
+      "tagline": "A 3D platformer with tight movement mechanics and accessibility options.",
+      "description": "A 3D platformer featuring tight movement mechanics and accessibility options. Playable with both controller and keyboard, including a web version for easy access.\n\nI thoroughly enjoyed developing this game, focusing heavily on game feel and visual polish to ensure the movement felt satisfying and responsive. Implementing the wall jump mechanics presented an interesting challenge, but it was rewarding to perfect.\n\nThis project sparked my passion for creating advanced movement systems, and I look forward to exploring more complex mechanics in future projects.",
+      "thumbnail": "/Portofolio-Website/Imgs/replay-platformer-gameplay.gif",
+      "youtube": "",
       "screenshots": [
-        "https://picsum.photos/seed/a1/1200/800",
-        "https://picsum.photos/seed/a2/1200/800"
+        "/Portofolio-Website/Imgs/replay-platformer-screenshot.png",
+        "/Portofolio-Website/Imgs/replay-platformer-extra-1.png",
+        "/Portofolio-Website/Imgs/replay-platformer-extra-2.png",
+        "/Portofolio-Website/Imgs/replay-platformer-extra-3.png"
       ],
       "tags": [
         "Unity",
         "C#",
         "3D",
-        "Physics"
+        "Platformer",
+        "Puzzle"
       ],
       "projectRole": "Gameplay Programmer",
-      "timeline": "2 weken",
+      "timeline": "3 weeks",
       "mechanics": [
         {
-          "subtitle": "Movement System",
-          "description": "De speler gebruikt thrust-based movement en smooth rotation, net als klassieke arcade shooters. In plaats van directe positie updates werkt alles met physics forces, wat zorgt voor natuurlijk momentum en inertia. Ook implementeerde ik screen-wrap waarbij je aan de ene kant verdwijnt en aan de andere kant verschijnt.",
-          "image": "https://picsum.photos/seed/e1/1200/800",
-          "code": "void Update()\n{\n    if (Input.GetKey(KeyCode.W))\n        rb.AddForce(transform.up * thrust);\n\n    float rotate = Input.GetAxis(\"Horizontal\");\n    rb.MoveRotation(rb.rotation - rotate * rotateSpeed * Time.deltaTime);\n}"
+          "subtitle": "Wall Jump - Detection",
+          "description": "The system constantly checks for walls using raycasts. This allows the player to slide down walls and prepare for a jump. We check for collision on both sides to determine the wall direction.",
+          "image": "/Portofolio-Website/Imgs/replay-code-walljump-1.png",
+          "code": "bool IsTouchingWall()\n{\n    return Physics2D.Raycast(transform.position, wallDir, wallCheckDist, wallLayer);\n}"
         },
         {
-          "subtitle": "Asteroid Spawner",
-          "description": "Asteroïden spawnen in willekeurige groottes, rotaties en snelheid om elke wave uniek te maken. Het spawning systeem gebruikt een sphere-based approach waarbij asteroids altijd buiten het zichtveld verschijnen. Grote asteroids splitsen in kleinere stukken wanneer ze geraakt worden, wat voor dynamische gameplay zorgt.",
-          "image": "https://picsum.photos/seed/e2/1200/800",
-          "code": "void SpawnAsteroid()\n{\n    Vector3 pos = Random.onUnitSphere * spawnRadius;\n    float size = Random.Range(0.5f, 2.5f);\n\n    GameObject ast = Instantiate(asteroidPrefab, pos, Random.rotation);\n    ast.transform.localScale = Vector3.one * size;\n\n    Rigidbody rb = ast.GetComponent<Rigidbody>();\n    rb.AddForce(Random.onUnitSphere * Random.Range(5,15), ForceMode.Impulse);\n}"
-        }
-      ]
-      ,
-      "git": "https://github.com/fvugt/asteroids-3d",
-      "itch": "https://fvugt.itch.io/asteroids-3d"
-    },
-    {
-      "id": "xr-escape-room",
-      "title": "XR Escape Room",
-      "tagline": "Een VR escape room met physics puzzels en interacties.",
-      "description": "Deze XR escape room is ontwikkeld met Unity's XR Interaction Toolkit en plaatst spelers in een mysterieuze kamer vol interactieve puzzels. Elke puzzel kan op meerdere manieren opgelost worden, wat spelers de vrijheid geeft om creatief te denken.\n\nIk wilde onderzoeken hoe je natuurlijke interacties kunt bouwen met VR controllers waarbij physics-based interactions zorgen voor maximale immersion.\n\nHet project richtte zich op drie kernpijlers: natuurlijke object manipulatie, physics-based puzzels en environmental storytelling waarbij de ruimte zelf het verhaal vertelt.",
-      "thumbnail": "https://picsum.photos/seed/xr/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      "screenshots": [
-        "https://picsum.photos/seed/xr1/1200/800",
-        "https://picsum.photos/seed/xr2/1200/800",
-        "https://picsum.photos/seed/xr3/1200/800"
-      ],
-      "tags": [
-        "Unity",
-        "C#",
-        "XR",
-        "VR"
-      ],
-      "projectRole": "XR Interaction Designer",
-      "timeline": "3 weken",
-      "mechanics": [
-        {
-          "subtitle": "Grab Interaction",
-          "description": "Objecten worden fysiek opgepakt door middel van XR Grab Interactables waarbij physics properties dynamisch worden aangepast. Voor kleine objecten gebruik ik precision grabs, terwijl grote objecten velocity-based grabs gebruiken die natuurlijker aanvoelen. De throw mechanic tracked controller velocity over meerdere frames voor realistische gooibewegingen.",
-          "image": "https://placehold.co/600x400?text=Grab",
-          "code": "public void OnSelectEntered(SelectEnterEventArgs args)\n{\n    grabbed = true;\n    rb.isKinematic = true;\n}\n\npublic void OnSelectExited(SelectExitEventArgs args)\n{\n    grabbed = false;\n    rb.isKinematic = false;\n}"
-        }
-      ]
-    },
-    {
-      "id": "topdown-shooter",
-      "title": "Topdown Shooter",
-      "tagline": "Een snelle twin-stick shooter met vijandige AI.",
-      "description": "Deze topdown shooter begon als een experiment om enemy AI te bouwen en groeide uit tot een complete arcade-style game. Het doel was om tight, responsive controls te combineren met challenging maar faire enemy behaviors.\n\nLater werd het uitgebreid met verschillende enemy types, wave progression systems en satisfying hit-feedback door screen shake en particle effects te combineren.\n\nHet project hielp mij de basis van AI state machines, navmesh pathfinding en difficulty balancing beter te leren begrijpen.",
-      "thumbnail": "https://picsum.photos/seed/shooter/1200/600",
-      "youtube": "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-      "screenshots": [
-        "https://picsum.photos/seed/shooter1/1200/800",
-        "https://picsum.photos/seed/shooter2/1200/800"
-      ],
-      "tags": [
-        "Unity",
-        "C#",
-        "AI",
-        "Topdown"
-      ],
-      "projectRole": "Programmer",
-      "timeline": "1 week",
-      "mechanics": [
-        {
-          "subtitle": "Enemy AI State Machine",
-          "description": "Een finite state machine voor vijanden die dynamisch schakelt tussen Idle → Chase → Attack → Retreat states. In Chase gebruiken enemies navmesh pathfinding, in Attack positioneren ze zich tactisch, en in Retreat trekken ze zich terug naar cover bij lage health. Verschillende enemy types hebben eigen parameters voor aggression range en attack patterns.",
-          "image": "https://placehold.co/600x400?text=Enemy+AI",
-          "code": "void Update()\n{\n    switch(state)\n    {\n        case Idle:\n            LookForPlayer();\n            break;\n\n        case Chase:\n            MoveTowardPlayer();\n            break;\n\n        case Attack:\n            TryShoot();\n            break;\n    }\n}"
+          "subtitle": "Wall Jump - Execution",
+          "description": "When jumping from a wall, we apply force in the opposite direction and upwards. This creates a satisfying arc that allows players to climb vertical shafts or bounce between walls.",
+          "image": "/Portofolio-Website/Imgs/replay-code-walljump-2.png",
+          "code": "void PerformWallJump()\n{\n    rb.velocity = new Vector2(-wallDir * jumpForce.x, jumpForce.y);\n    isWallJumping = true;\n}"
         },
         {
-          "subtitle": "Projectile System",
-          "description": "Hit-detection via raycasts met instant feedback - veel sneller en accurater dan physics-based projectiles. De raycast spawned een hit effect op het impact point en gebruikt layer masks om te bepalen wat geraakt kan worden. Elk schot krijgt een tracer effect die de bullet path visualiseert.",
-          "image": "https://placehold.co/600x400?text=Projectile",
-          "code": "void Shoot()\n{\n    Ray ray = new Ray(transform.position, transform.forward);\n\n    if (Physics.Raycast(ray, out var hit, 50f))\n    {\n        Debug.Log($\"Hit {hit.collider.name}\");\n    }\n}"
+          "subtitle": "Enemy FSM - Base State",
+          "description": "I implemented a flexible Finite State Machine for enemy AI. The base state defines the contract (Enter, Update, Exit) that all specific behavior states must implement.",
+          "image": "/Portofolio-Website/Imgs/replay-code-enemy-1.png",
+          "code": "public abstract class EnemyState\n{\n    protected Enemy enemy;\n    public abstract void Enter();\n    public abstract void Update();\n    public abstract void Exit();\n}"
+        },
+        {
+          "subtitle": "Enemy FSM - Chase Logic",
+          "description": "In the Chase state, these enemies navigate the platforming environment to reach the player. They can jump over gaps and track the player's position efficiently.",
+          "image": "/Portofolio-Website/Imgs/replay-code-enemy-2.png",
+          "code": "public class ChaseState : EnemyState\n{\n    public override void Update()\n    {\n        enemy.MoveTowards(target.position);\n        if (enemy.IsinAttackRange())\n            enemy.ChangeState(new AttackState());\n    }\n}"
+        },
+        {
+          "subtitle": "Enemy FSM - Attack Behavior",
+          "description": "The Attack state handles the combat logic. It triggers animations, deals damage, and creates a cooldown window before the enemy can pursue or attack again.",
+          "image": "/Portofolio-Website/Imgs/replay-code-enemy-3.png",
+          "code": "public class AttackState : EnemyState\n{\n    public override void Enter()\n    {\n        enemy.animator.SetTrigger(\"Attack\");\n        enemy.StartCoroutine(AttackCooldown());\n    }\n}"
         }
-      ]
+      ],
+      "git": "",
+      "itch": ""
     },
     {
-      "id": "vr-training-sim",
-      "title": "VR Training Simulator",
-      "tagline": "Een realistische VR-training voor industriële procedures.",
-      "description": "Deze VR training simulator is gebouwd voor het oefenen van complexe industriële procedures in een volledig veilige virtuele omgeving. Het doel was om een training te creëren die net zo effectief is als hands-on training, maar zonder de risico's en kosten.\n\nDe focus lag op realistische hand-tracking voor natuurlijke interacties, stapsgewijze instructies die gebruikers begeleiden en gedetailleerde feedback op gebruikersacties waarbij immediate feedback het leerproces versterkt.\n\nHet project leerde mij hoe je effectieve VR training ervaringen ontwerpt met verschillende difficulty modes en performance tracking om daadwerkelijk kennisoverdracht te bevorderen.",
-      "thumbnail": "https://picsum.photos/seed/vrtrain/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
+      "id": "vr-shooter",
+      "title": "VR Shooter",
+      "tagline": "An immersive VR shooter with realistic weapon handling and enemy AI.",
+      "description": "VR Shooter is an action-packed virtual reality shooter that focuses on realistic weapon mechanics and engaging combat. Players use motion controllers to physically aim, reload, and fire various weapons while facing waves of intelligent enemies.\n\nThis was my second favorite project because it combined the excitement of VR interaction with challenging technical problems like realistic weapon physics, two-handed weapon handling, and performance optimization for VR. The feeling of physically reloading a weapon in VR is incredibly satisfying.\n\nI focused on making every interaction feel natural and responsive, from grabbing weapons to ejecting magazines. The project taught me about VR-specific design patterns, haptic feedback, and how to maintain smooth performance in VR environments.",
+      "thumbnail": "https://picsum.photos/seed/vrshooter/1200/600",
+      "youtube": "",
       "screenshots": [
-        "https://picsum.photos/seed/vrt1/1200/800",
-        "https://picsum.photos/seed/vrt2/1200/800",
-        "https://picsum.photos/seed/vrt3/1200/800"
+        "https://picsum.photos/seed/vrs1/1200/800",
+        "https://picsum.photos/seed/vrs2/1200/800",
+        "https://picsum.photos/seed/vrs3/1200/800"
       ],
       "tags": [
         "Unity",
         "VR",
-        "Hand Tracking",
-        "Training"
+        "XR Toolkit",
+        "Shooter",
+        "Physics"
       ],
       "projectRole": "VR Developer",
-      "timeline": "4 weken",
+      "timeline": "4 weeks",
       "mechanics": [
         {
-          "subtitle": "Step-by-Step Guide System",
-          "description": "Een dynamisch instructiesysteem dat de gebruiker door complexe multi-step procedures leidt met real-time visual guidance. Elke step heeft validation criteria die checken of de actie correct is uitgevoerd. In guided mode krijg je hints als je te lang stilstaat, terwijl advanced mode minimale assists heeft voor realistischere training.",
-          "image": "https://placehold.co/600x400?text=Guide+System",
-          "code": "public class StepGuide : MonoBehaviour\n{\n    public List<TrainingStep> steps;\n    private int currentStep = 0;\n\n    void CheckStepCompletion()\n    {\n        if (steps[currentStep].IsCompleted())\n        {\n            currentStep++;\n            ShowNextInstruction();\n        }\n    }\n}"
+          "subtitle": "Two-Handed Weapon System",
+          "description": "Weapons can be held with one or two hands for improved stability and accuracy. When grabbing a weapon with the second hand, the weapon's recoil is reduced and aim steadiness increases. The system tracks both controller positions and rotations to calculate the proper weapon orientation. Releasing the secondary hand smoothly transitions back to one-handed mode.",
+          "image": "https://picsum.photos/seed/weapon1/1200/800",
+          "code": "void UpdateTwoHandedGrip()\n{\n    if (secondaryHand != null)\n    {\n        Vector3 direction = secondaryHand.position - primaryHand.position;\n        transform.rotation = Quaternion.LookRotation(direction);\n        recoilMultiplier = 0.5f;\n    }\n}"
         },
         {
-          "subtitle": "Hand Tracking Validation",
-          "description": "Controleert of handposities en hand poses correct zijn voor specifieke acties door palm orientation en finger positions te valideren. Wanneer je grip incorrect is, verschijnt een ghost hand overlay die de correcte positie toont. Dit is veel effectiever dan tekstuele instructies omdat mensen de juiste pose kunnen imiteren.",
-          "image": "https://placehold.co/600x400?text=Hand+Tracking",
-          "code": "bool ValidateHandPose(HandPose required)\n{\n    float similarity = Vector3.Dot(\n        currentPose.palmNormal,\n        required.palmNormal\n    );\n\n    return similarity > 0.95f;\n}"
-        }
-      ],
-      "git": "https://github.com/fvugt/vr-training-sim",
-      "itch": ""
-    },
-    {
-      "id": "ar-museum-guide",
-      "title": "AR Museum Guide",
-      "tagline": "Een interactieve AR-applicatie voor museum bezoekers.",
-      "description": "De AR Museum Guide brengt museumtentoonstellingen tot leven door digitale content over fysieke objecten heen te projecteren en transformeert statische kunstwerken in interactieve verhalen. Een Romeins schilderij komt tot leven met animated characters, bij fossielen verschijnen 3D reconstructies.\n\nGebruikers kunnen hun telefoon op kunstwerken richten om extra informatie, 3D modellen en interactieve elementen te zien die historical context bieden op een engaging manier.\n\nDit project introduceerde mij in AR Foundation, image tracking en UI design voor augmented reality waarbij ik leerde werken met verschillende lighting conditions in musea.",
-      "thumbnail": "https://picsum.photos/seed/armuseum/1200/600",
-      "youtube": "https://www.youtube.com/embed/dQw4w9WgXcQ",
-      "screenshots": [
-        "https://picsum.photos/seed/arm1/1200/800",
-        "https://picsum.photos/seed/arm2/1200/800"
-      ],
-      "tags": [
-        "Unity",
-        "AR Foundation",
-        "Mobile",
-        "Image Tracking"
-      ],
-      "projectRole": "AR Developer",
-      "timeline": "3 weken",
-      "mechanics": [
-        {
-          "subtitle": "Image Tracking System",
-          "description": "Herkent kunstwerken en plaatst AR content op de juiste posities door gebruik te maken van AR Foundation's image tracking. Wanneer een artwork gedetecteerd wordt, spawned het systeem de bijbehorende content - info panels, 3D modellen of video overlays. De content blijft stabiel geanchored zelfs als de camera beweegt.",
-          "image": "https://placehold.co/600x400?text=Image+Tracking",
-          "code": "void OnTrackedImagesChanged(ARTrackedImagesChangedEventArgs args)\n{\n    foreach (var trackedImage in args.added)\n    {\n        string artworkId = trackedImage.referenceImage.name;\n        SpawnARContent(artworkId, trackedImage.transform);\n    }\n}"
-        },
-        {
-          "subtitle": "Interactive 3D Models",
-          "description": "Gebruikers kunnen 3D modellen roteren en schalen met intuïtive touch gestures - single finger drag roteert, pinch zoom schaalt en two-finger drag verplaatst het model. Sommige modellen zijn animated en kunnen hun functie demonstreren. Custom shaders zorgen dat de modellen natuurlijk blenden met de real world door environment lighting.",
-          "image": "https://placehold.co/600x400?text=3D+Interaction",
-          "code": "void HandleTouchInput()\n{\n    if (Input.touchCount == 2)\n    {\n        Touch t1 = Input.GetTouch(0);\n        Touch t2 = Input.GetTouch(1);\n\n        float pinchDist = Vector2.Distance(t1.position, t2.position);\n        float scale = pinchDist / initialPinchDist;\n\n        model.localScale = initialScale * scale;\n    }\n}"
+          "subtitle": "Physical Reload Mechanics",
+          "description": "Reloading requires physical actions: press a button to eject the magazine, grab a new magazine from your belt, and insert it into the weapon. Each step has proper collision detection and haptic feedback. The magazine socket uses a snap zone that guides the player's hand when the magazine is close enough, making the reload feel smooth and satisfying.",
+          "image": "https://picsum.photos/seed/weapon2/1200/800",
+          "code": "void OnMagazineInserted(Magazine mag)\n{\n    currentMagazine = mag;\n    ammoCount = mag.ammoCapacity;\n    PlayHapticFeedback(0.3f);\n    audioSource.PlayOneShot(reloadSound);\n}"
         }
       ],
       "git": "",
-      "itch": "https://fvugt.itch.io/ar-museum"
+      "itch": ""
+    },
+    {
+      "id": "vr-winkel",
+      "title": "VR Winkel",
+      "tagline": "A virtual reality shopping experience with realistic product interactions.",
+      "description": "VR Winkel (VR Shop) is a virtual reality shopping simulation that allows users to browse products, pick them up, examine them, and add items to their cart in an immersive 3D environment. The goal was to create a natural shopping experience that feels intuitive and engaging.\n\nThe project focused on realistic object manipulation, UI design in 3D space, and creating a comfortable VR experience that users can navigate without motion sickness. I implemented various interaction methods including direct grab, ray-based selection, and physical shopping cart mechanics.\n\nThis project taught me about VR UX design, spatial UI placement, and how to balance realism with usability in virtual environments.",
+      "thumbnail": "https://picsum.photos/seed/vrshop/1200/600",
+      "youtube": "",
+      "screenshots": [
+        "https://picsum.photos/seed/shop1/1200/800",
+        "https://picsum.photos/seed/shop2/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "VR",
+        "XR Toolkit",
+        "Simulation",
+        "UI/UX"
+      ],
+      "projectRole": "VR Developer",
+      "timeline": "2 weeks",
+      "mechanics": [
+        {
+          "subtitle": "Product Interaction System",
+          "description": "Products can be picked up, rotated, and examined from all angles using natural hand movements. When holding a product, an information panel appears showing details like price, description, and features. The system uses physics-based interactions so products feel like they have realistic weight and can be placed back on shelves naturally.",
+          "image": "https://picsum.photos/seed/product1/1200/800",
+          "code": "void OnProductGrabbed(Product product)\n{\n    ShowProductInfo(product);\n    ApplyPhysicsProperties(product);\n    EnableHighlight(product, true);\n}"
+        },
+        {
+          "subtitle": "Shopping Cart Mechanics",
+          "description": "The shopping cart follows the player and can be pushed or pulled using the handles. Items can be dropped into the cart, which uses trigger zones to detect when products are added. The cart maintains a list of items and displays the total price on a floating UI panel. Products snap to organized positions inside the cart to prevent clutter.",
+          "image": "https://picsum.photos/seed/cart1/1200/800",
+          "code": "void OnItemAddedToCart(Product item)\n{\n    cartItems.Add(item);\n    totalPrice += item.price;\n    UpdateCartUI();\n    SnapItemToCartPosition(item);\n}"
+        }
+      ],
+      "git": "",
+      "itch": ""
+    },
+    {
+      "id": "invasion",
+      "title": "Invasion",
+      "tagline": "A wave-based defense game where you protect your base from alien invaders.",
+      "description": "Invasion is a wave-based defense game where players must protect their base from increasingly difficult waves of alien enemies. Players can build defensive structures, upgrade weapons, and strategically position themselves to survive as long as possible.\n\nThe project focused on enemy AI, wave progression systems, and resource management. Each wave introduces new enemy types with different behaviors and abilities, requiring players to adapt their strategy. The difficulty curve was carefully balanced through extensive playtesting.\n\nI learned about enemy spawning systems, difficulty scaling, and how to create satisfying progression that keeps players engaged through multiple waves.",
+      "thumbnail": "https://picsum.photos/seed/invasion/1200/600",
+      "youtube": "",
+      "screenshots": [
+        "https://picsum.photos/seed/inv1/1200/800",
+        "https://picsum.photos/seed/inv2/1200/800"
+      ],
+      "tags": [
+        "Unity",
+        "C#",
+        "Tower Defense",
+        "AI",
+        "Strategy"
+      ],
+      "projectRole": "Gameplay Programmer",
+      "timeline": "3 weeks",
+      "mechanics": [
+        {
+          "subtitle": "Wave Spawning System",
+          "description": "Enemies spawn in waves with increasing difficulty. Each wave has a configuration that defines enemy types, spawn count, and spawn intervals. The system uses spawn points around the map perimeter and balances spawns to prevent overwhelming one side. Between waves, players get a brief preparation period to build defenses and reposition.",
+          "image": "https://picsum.photos/seed/wave1/1200/800",
+          "code": "void SpawnWave(WaveConfig wave)\n{\n    for (int i = 0; i < wave.enemyCount; i++)\n    {\n        SpawnPoint point = GetRandomSpawnPoint();\n        Enemy enemy = Instantiate(wave.enemyPrefab, point.position);\n        yield return new WaitForSeconds(wave.spawnInterval);\n    }\n}"
+        },
+        {
+          "subtitle": "Enemy AI Pathfinding",
+          "description": "Enemies use NavMesh pathfinding to navigate around obstacles and find the shortest path to the base. Different enemy types have varying speeds and behaviors - some rush directly while others take cover and advance tactically. When enemies reach the base, they attack it until destroyed or the base is destroyed.",
+          "image": "https://picsum.photos/seed/enemy1/1200/800",
+          "code": "void UpdateAI()\n{\n    if (target != null)\n    {\n        agent.SetDestination(target.position);\n        \n        if (Vector3.Distance(transform.position, target.position) < attackRange)\n        {\n            Attack();\n        }\n    }\n}"
+        }
+      ],
+      "git": "",
+      "itch": ""
     }
   ]
 }

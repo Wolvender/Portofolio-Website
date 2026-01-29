@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "../Icons/icons.jsx";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function ProjectGallery({ project }) {
   const { screenshots, youtube } = project;
@@ -24,31 +25,42 @@ export default function ProjectGallery({ project }) {
 
   return (
     <div className="mb-4 mx-4">
-      <h2 className="text-xl font-semibold text-(--text)">Gallery</h2>
+      <h2 className="text-xl font-semibold text-(--text) mb-4">Gallery</h2>
 
       {slides.length > 0 && (
         <div className="relative group mt-4">
           {/* Slide Container */}
-          <div className="overflow-hidden bg-(--surface) aspect-video">
-            {/* Video Slide */}
-            {slides[currentIndex].type === "video" && (
-              <iframe
-                src={slides[currentIndex].src}
-                title="Project Video"
-                allowFullScreen
-                className="w-full h-full"
-              />
-            )}
+          <div className="overflow-hidden bg-(--surface) aspect-video rounded-xl border border-(--bordercolor) relative">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentIndex}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                className="w-full h-full absolute inset-0"
+              >
+                {/* Video Slide */}
+                {slides[currentIndex].type === "video" && (
+                  <iframe
+                    src={slides[currentIndex].src}
+                    title="Project Video"
+                    allowFullScreen
+                    className="w-full h-full"
+                  />
+                )}
 
-            {/* Image Slide */}
-            {slides[currentIndex].type === "image" && (
-              <img
-                src={slides[currentIndex].src}
-                alt={`Slide ${currentIndex + 1}`}
-                className="w-full h-full object-cover cursor-pointer"
-                onClick={() => window.open(slides[currentIndex].src, "_blank")}
-              />
-            )}
+                {/* Image Slide */}
+                {slides[currentIndex].type === "image" && (
+                  <img
+                    src={slides[currentIndex].src}
+                    alt={`Slide ${currentIndex + 1} `}
+                    className="w-full h-full object-cover cursor-pointer"
+                    onClick={() => window.open(slides[currentIndex].src, "_blank")}
+                  />
+                )}
+              </motion.div>
+            </AnimatePresence>
           </div>
 
           {/* Navigation Arrows */}
@@ -76,11 +88,10 @@ export default function ProjectGallery({ project }) {
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
-                    className={`w-2 h-2 rounded-full transition-all ${
-                      idx === currentIndex 
-                        ? "bg-white w-4" 
+                    className={`w-2 h-2 rounded-full transition-all ${idx === currentIndex
+                        ? "bg-white w-4"
                         : "bg-white/50 hover:bg-white/80"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>

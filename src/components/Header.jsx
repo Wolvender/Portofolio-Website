@@ -1,8 +1,19 @@
 import { Link, useLocation } from "react-router-dom";
 import { siteConfig } from "../siteConfig";
+import { useState, useEffect } from "react";
 
 export default function Header() {
   const location = useLocation();
+  const [scrolled, setScrolled] = useState(false);
+
+  // Track scroll position for header shrinking effect
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   //Helper functie om te checken of een link actief is
   const isActive = (path) => {
@@ -18,46 +29,77 @@ export default function Header() {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-(--surface) border-b border-(--bordercolor)">
-      <nav className="container mx-auto px-4 h-16 flex items-center justify-between">
-        {/* Projects link on LEFT */}
-        <Link
-          to="/"
-          onClick={scrollToTop}
-          className={`transition-colors text-sm ${
-            isActive("/") 
-              ? "text-(--accent) font-semibold" 
-              : "text-(--muted) hover:text-(--text)"
-          }`}
-        >
-          Projects
-        </Link>
-
-        {/* About and Contact on RIGHT */}
-        <div className="flex gap-6">
+    <header className={`glass-header sticky top-0 z-50 transition-all duration-300 ${
+      scrolled ? 'py-2' : 'py-4'
+    }`}>
+      <nav className="container mx-auto px-6 flex items-center justify-between">
+        {/* Left Navigation */}
+        <div className="flex gap-8 flex-1">
           <Link
-            to="/about"
+            to="/"
             onClick={scrollToTop}
-            className={`transition-colors text-sm ${
-              isActive("/about") 
-                ? "text-(--accent) font-semibold" 
+            className={`nav-link transition-all duration-300 text-sm font-medium ${
+              isActive("/") 
+                ? "text-(--accent)" 
                 : "text-(--muted) hover:text-(--text)"
             }`}
           >
-            Over Mij
+            Projects
           </Link>
+          <Link
+            to="/about"
+            onClick={scrollToTop}
+            className={`nav-link transition-all duration-300 text-sm font-medium ${
+              isActive("/about") 
+                ? "text-(--accent)" 
+                : "text-(--muted) hover:text-(--text)"
+            }`}
+          >
+            About
+          </Link>
+        </div>
 
+        {/* Center Logo/Name */}
+        <Link 
+          to="/" 
+          onClick={scrollToTop}
+          className="flex items-center gap-3 group"
+        >
+          <img
+            src={siteConfig.aboutImage}
+            alt={siteConfig.name}
+            className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${
+              scrolled ? 'w-8 h-8' : 'w-10 h-10'
+            } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
+          />
+          <span className={`font-bold text-(--text) transition-all duration-300 ${
+            scrolled ? 'text-base' : 'text-lg'
+          } group-hover:text-(--accent)`}>
+            {siteConfig.name}
+          </span>
+        </Link>
+
+        {/* Right Navigation */}
+        <div className="flex gap-8 flex-1 justify-end">
           <Link
             to="/contact"
             onClick={scrollToTop}
-            className={`transition-colors text-sm ${
+            className={`nav-link transition-all duration-300 text-sm font-medium ${
               isActive("/contact") 
-                ? "text-(--accent) font-semibold" 
+                ? "text-(--accent)" 
                 : "text-(--muted) hover:text-(--text)"
             }`}
           >
             Contact
           </Link>
+          <a
+            href={siteConfig.socials.github}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="nav-link transition-all duration-300 text-sm font-medium text-(--muted) hover:text-(--text)"
+          >
+            GitHub
+          </a>
         </div>
       </nav>
     </header>
