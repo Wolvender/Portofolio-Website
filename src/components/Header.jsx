@@ -1,10 +1,13 @@
 import { Link, useLocation } from "react-router-dom";
 import { siteConfig } from "../siteConfig";
 import { useState, useEffect } from "react";
+import { Menu, X } from "./Icons/icons";
+import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
   const location = useLocation();
   const [scrolled, setScrolled] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Track scroll position for header shrinking effect
   useEffect(() => {
@@ -24,6 +27,11 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setMobileMenuOpen(false);
+  }, [location]);
+
   //Helper functie om te checken of een link actief is
   const isActive = (path) => {
     if (path === "/") {
@@ -37,75 +45,137 @@ export default function Header() {
     window.scrollTo(0, 0);
   };
 
+  const navLinks = [
+    { name: "Projects", path: "/" },
+    { name: "About", path: "/about" },
+    { name: "Contact", path: "/contact" },
+  ];
+
   return (
-    <header className={`glass-header sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'
-      }`}>
-      <nav className="container mx-auto px-6 flex items-center justify-between">
-        {/* Left Navigation */}
-        <div className="flex gap-8 flex-1">
+    <>
+      <header className={`glass-header sticky top-0 z-50 transition-all duration-300 ${scrolled ? 'py-2' : 'py-4'
+        }`}>
+        <nav className="container mx-auto px-6 flex items-center justify-between relative">
+
+          {/* Mobile Menu Button - Left Aligned on Mobile */}
+          <button
+            className="md:hidden text-(--text) p-1"
+            onClick={() => setMobileMenuOpen(true)}
+          >
+            <Menu className="w-6 h-6" />
+          </button>
+
+          {/* Left Navigation (Desktop) */}
+          <div className="hidden md:flex gap-8 flex-1">
+            <Link
+              to="/"
+              onClick={scrollToTop}
+              className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/")
+                  ? "text-(--accent)"
+                  : "text-(--muted) hover:text-(--text)"
+                }`}
+            >
+              Projects
+            </Link>
+            <Link
+              to="/about"
+              onClick={scrollToTop}
+              className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/about")
+                  ? "text-(--accent)"
+                  : "text-(--muted) hover:text-(--text)"
+                }`}
+            >
+              About
+            </Link>
+          </div>
+
+          {/* Center Logo/Name */}
           <Link
             to="/"
             onClick={scrollToTop}
-            className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/")
-                ? "text-(--accent)"
-                : "text-(--muted) hover:text-(--text)"
-              }`}
+            className="flex items-center gap-3 group absolute left-1/2 -translate-x-1/2 md:relative md:left-0 md:translate-x-0"
           >
-            Projects
+            <img
+              src={siteConfig.aboutImage}
+              alt={siteConfig.name}
+              className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${scrolled ? 'w-8 h-8' : 'w-10 h-10'
+                } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
+            />
+            <span className={`font-bold text-(--text) transition-all duration-300 hidden md:block ${scrolled ? 'text-base' : 'text-lg'
+              } group-hover:text-(--accent)`}>
+              {siteConfig.name}
+            </span>
           </Link>
-          <Link
-            to="/about"
-            onClick={scrollToTop}
-            className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/about")
-                ? "text-(--accent)"
-                : "text-(--muted) hover:text-(--text)"
-              }`}
-          >
-            About
-          </Link>
-        </div>
 
-        {/* Center Logo/Name */}
-        <Link
-          to="/"
-          onClick={scrollToTop}
-          className="flex items-center gap-3 group"
-        >
-          <img
-            src={siteConfig.aboutImage}
-            alt={siteConfig.name}
-            className={`rounded-full object-cover border-2 border-(--accent) transition-all duration-300 ${scrolled ? 'w-8 h-8' : 'w-10 h-10'
-              } group-hover:scale-110 group-hover:border-(--accent-secondary)`}
-          />
-          <span className={`font-bold text-(--text) transition-all duration-300 ${scrolled ? 'text-base' : 'text-lg'
-            } group-hover:text-(--accent)`}>
-            {siteConfig.name}
-          </span>
-        </Link>
+          {/* Right Navigation (Desktop) */}
+          <div className="hidden md:flex gap-8 flex-1 justify-end">
+            <Link
+              to="/contact"
+              onClick={scrollToTop}
+              className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/contact")
+                  ? "text-(--accent)"
+                  : "text-(--muted) hover:text-(--text)"
+                }`}
+            >
+              Contact
+            </Link>
+            <a
+              href={siteConfig.socials.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="nav-link transition-all duration-300 text-sm font-medium text-(--muted) hover:text-(--text)"
+            >
+              GitHub
+            </a>
+          </div>
 
-        {/* Right Navigation */}
-        <div className="flex gap-8 flex-1 justify-end">
-          <Link
-            to="/contact"
-            onClick={scrollToTop}
-            className={`nav-link transition-all duration-300 text-sm font-medium ${isActive("/contact")
-                ? "text-(--accent)"
-                : "text-(--muted) hover:text-(--text)"
-              }`}
+          {/* Mobile Placeholder for Balance */}
+          <div className="w-6 md:hidden"></div>
+        </nav>
+      </header>
+
+      {/* Mobile Menu Overlay */}
+      <AnimatePresence>
+        {mobileMenuOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -20 }}
+            className="fixed inset-0 z-[60] bg-(--bg) bg-opacity-95 backdrop-blur-xl md:hidden flex flex-col items-center justify-center space-y-8"
           >
-            Contact
-          </Link>
-          <a
-            href={siteConfig.socials.github}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="nav-link transition-all duration-300 text-sm font-medium text-(--muted) hover:text-(--text)"
-          >
-            GitHub
-          </a>
-        </div>
-      </nav>
-    </header>
+            <button
+              className="absolute top-6 right-6 text-(--muted) hover:text-(--text)"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              <X className="w-8 h-8" />
+            </button>
+
+            {navLinks.map((link) => (
+              <Link
+                key={link.name}
+                to={link.path}
+                onClick={() => {
+                  scrollToTop();
+                  setMobileMenuOpen(false);
+                }}
+                className={`text-3xl font-bold ${isActive(link.path) ? "text-(--accent)" : "text-(--text)"
+                  }`}
+              >
+                {link.name}
+              </Link>
+            ))}
+
+            <a
+              href={siteConfig.socials.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-xl text-(--muted) mt-4 font-mono"
+            >
+              GitHub
+            </a>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </>
   );
 }
-
