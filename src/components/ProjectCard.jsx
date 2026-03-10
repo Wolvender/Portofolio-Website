@@ -1,10 +1,14 @@
 import { Link } from "react-router-dom";
 import { useState, useRef } from "react";
+import OptimizedImage from "./OptimizedImage";
 
-export default function ProjectCard({ project, featured = false }) {
+export default function ProjectCard({ project, featured = false, layout = "grid" }) {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovered, setIsHovered] = useState(false);
   const cardRef = useRef(null);
+
+  const isList = layout === "list";
+  const isFeatured = featured && !isList;
 
   const handleMouseMove = (e) => {
     if (!cardRef.current) return;
@@ -35,11 +39,11 @@ export default function ProjectCard({ project, featured = false }) {
       onMouseMove={handleMouseMove}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className={`card-3d group block bg-(--surface) rounded-xl overflow-hidden border border-(--bordercolor) hover:border-(--accent) transition-all duration-300 ${featured ? 'md:col-span-2 md:row-span-2' : ''
-        }`}
+      className={`card-3d group block bg-(--surface) rounded-xl overflow-hidden border border-(--bordercolor) hover:border-(--accent) transition-all duration-300 ${isFeatured ? 'md:col-span-2 md:row-span-2' : ''
+        } ${isList ? 'md:flex md:items-center' : ''}`}
       style={{
         transform: isHovered
-          ? `perspective(1000px) rotateX(${mousePosition.rotateX}deg) rotateY(${mousePosition.rotateY}deg) translateY(-8px) scale(1.02)`
+          ? `perspective(1000px) rotateX(${mousePosition.rotateX}deg) rotateY(${mousePosition.rotateY}deg) translateY(-8px) scale(1.01)`
           : 'perspective(1000px) rotateX(0deg) rotateY(0deg)',
         boxShadow: isHovered
           ? '0 20px 60px rgba(16, 185, 129, 0.3), 0 0 40px rgba(6, 182, 212, 0.2)'
@@ -60,9 +64,9 @@ export default function ProjectCard({ project, featured = false }) {
         />
       )}
 
-      {/* Thumbnail with parallax */}
-      <div className={`relative overflow-hidden ${featured ? 'aspect-[16/10]' : 'aspect-video'}`}>
-        <img
+      {/* Optimized Thumbnail with parallax container */}
+      <div className={`relative overflow-hidden ${isFeatured ? 'aspect-[16/10]' : isList ? 'aspect-video md:aspect-square md:w-48 shrink-0' : 'aspect-video'}`}>
+        <OptimizedImage
           src={project.thumbnail}
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-500"
@@ -73,32 +77,41 @@ export default function ProjectCard({ project, featured = false }) {
           }}
         />
 
+        {/* Persistent Gradient for Contrast */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-(--overlay) opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-          <span className="text-(--text) font-semibold text-lg">View Project →</span>
+          <span className="text-(--text) font-semibold text-lg border border-(--accent) px-4 py-2 rounded bg-black/50 backdrop-blur-sm">
+            View Project_
+          </span>
         </div>
       </div>
 
       {/* Content */}
-      <div className={`p-6 ${featured ? 'md:p-8' : ''}`}>
-        <h3 className={`font-bold text-(--text) mb-2 group-hover:text-(--accent) transition-colors ${featured ? 'text-2xl md:text-3xl' : 'text-xl'
-          }`}>
-          {project.title}
-        </h3>
-        <p className={`text-(--muted) ${featured ? 'text-base line-clamp-3' : 'text-sm line-clamp-2'}`}>
-          {project.tagline}
-        </p>
+      <div className={`p-6 ${isFeatured ? 'md:p-8' : ''} ${isList ? 'flex-1' : ''}`}>
+        <div className={`${isList ? 'flex flex-col md:flex-row md:items-center justify-between gap-4' : ''}`}>
+          <div>
+            <h3 className={`font-bold text-(--text) mb-2 group-hover:text-(--accent) transition-colors ${isFeatured ? 'text-2xl md:text-3xl' : 'text-xl'
+              }`}>
+              {project.title}
+            </h3>
+            <p className={`text-(--muted) ${isFeatured ? 'text-base line-clamp-3' : 'text-sm line-clamp-2'}`}>
+              {project.tagline}
+            </p>
+          </div>
 
-        {/* Tags */}
-        <div className="flex flex-wrap gap-2 mt-4">
-          {project.tags.slice(0, featured ? 5 : 3).map((tag) => (
-            <span
-              key={tag}
-              className="px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-300 rounded-full border border-emerald-500/20 hover:bg-emerald-500/20 transition-all"
-            >
-              {tag}
-            </span>
-          ))}
+          {/* Tags */}
+          <div className={`flex flex-wrap gap-2 mt-4 ${isList ? 'md:mt-0' : ''}`}>
+            {project.tags.slice(0, isFeatured ? 5 : 3).map((tag) => (
+              <span
+                key={tag}
+                className="px-3 py-1 text-xs font-medium bg-emerald-500/10 text-emerald-300 rounded-full border border-emerald-500/20 hover:bg-emerald-500/20 transition-all font-mono"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
         </div>
       </div>
     </Link>

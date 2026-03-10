@@ -9,9 +9,9 @@
       "youtube": "",
       "screenshots": [
         "/Portofolio-Website/Imgs/replay-platformer-screenshot.png",
-        "/Portofolio-Website/Imgs/replay-platformer-extra-1.png",
-        "/Portofolio-Website/Imgs/replay-platformer-extra-2.png",
-        "/Portofolio-Website/Imgs/replay-platformer-extra-3.png"
+        "/Portofolio-Website/Imgs/Startpage.png",
+        "/Portofolio-Website/Imgs/Pickup.png",
+        "/Portofolio-Website/Imgs/Intromap.png"
       ],
       "tags": [
         "Unity",
@@ -25,147 +25,175 @@
       "mechanics": [
         {
           "subtitle": "Wall Jump - Detection",
-          "description": "The system constantly checks for walls using raycasts. This allows the player to slide down walls and prepare for a jump. We check for collision on both sides to determine the wall direction.",
+          "description": "Continuous raycasting detects nearby walls, allowing the player to enter a 'Wall Slide' state. This state reduces terminal velocity and enables the wall jump mechanic.",
           "image": "/Portofolio-Website/Imgs/replay-code-walljump-1.png",
-          "code": "bool IsTouchingWall()\n{\n    return Physics2D.Raycast(transform.position, wallDir, wallCheckDist, wallLayer);\n}"
+          "gif": "/Portofolio-Website/Imgs/wall-jump-preview.gif",
+          "code": "private void CheckForWalls()\n{\n    isWallSliding = false;\n    \n    // Check left and right for wall collision\n    bool rightWall = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);\n    bool leftWall = Physics2D.Raycast(transform.position, Vector2.left, wallCheckDistance, wallLayer);\n\n    if ((rightWall || leftWall) && !isGrounded && rb.velocity.y < 0)\n    {\n        isWallSliding = true;\n        wallDir = rightWall ? 1 : -1;\n    }\n}"
         },
         {
           "subtitle": "Wall Jump - Execution",
-          "description": "When jumping from a wall, we apply force in the opposite direction and upwards. This creates a satisfying arc that allows players to climb vertical shafts or bounce between walls.",
+          "description": "Executing a jump while sliding applies an instantaneous impulse force away from the wall and upwards. A brief 'jump lock' prevents immediate redirection, ensuring a consistent arc.",
           "image": "/Portofolio-Website/Imgs/replay-code-walljump-2.png",
-          "code": "void PerformWallJump()\n{\n    rb.velocity = new Vector2(-wallDir * jumpForce.x, jumpForce.y);\n    isWallJumping = true;\n}"
+          "code": "public void WallJump()\n{\n    if (isWallSliding)\n    {\n        // Apply force in opposite direction of wall\n        Vector2 force = new Vector2(-wallDir * wallJumpForce.x, wallJumpForce.y);\n        rb.velocity = Vector2.zero; // Reset momentum\n        rb.AddForce(force, ForceMode2D.Impulse);\n        \n        StartCoroutine(DisableMovement(0.15s)); // Brief lock\n    }\n}"
         },
         {
-          "subtitle": "Enemy FSM - Base State",
-          "description": "I implemented a flexible Finite State Machine for enemy AI. The base state defines the contract (Enter, Update, Exit) that all specific behavior states must implement.",
+          "subtitle": "Enemy State Machine",
+          "description": "A robust Finite State Machine (FSM) manages complex enemy behaviors, including Roaming, Chasing, and Attacking. This architecture allows for clean transitions and modular AI logic.",
           "image": "/Portofolio-Website/Imgs/replay-code-enemy-1.png",
-          "code": "public abstract class EnemyState\n{\n    protected Enemy enemy;\n    public abstract void Enter();\n    public abstract void Update();\n    public abstract void Exit();\n}"
+          "code": "void Start()\n{\n    // Cache references\n    agent = GetComponent<NavMeshAgent>();\n    animator = GetComponent<Animator>();\n    player = GameObject.FindWithTag(\"Player\");\n    playerHealth = player.GetComponent<PlayerHealthManager>();\n\n    // Initialize states\n    roamState = new EnemyRoamState(this);\n    chaseState = new EnemyChaseState(this);\n    attackState = new EnemyAttackState(this);\n    dieState = new EnemyDieState(this);\n\n    // Start in Roaming\n    ChangeState(roamState);\n}"
         },
         {
-          "subtitle": "Enemy FSM - Chase Logic",
-          "description": "In the Chase state, these enemies navigate the platforming environment to reach the player. They can jump over gaps and track the player's position efficiently.",
+          "subtitle": "Heatmap-Based Roaming",
+          "description": "To create more natural exploration, enemies use a 'visit count' heatmap. They periodically sample nearby points and prioritize those they haven't visited recently, ensuring thorough coverage of the environment.",
           "image": "/Portofolio-Website/Imgs/replay-code-enemy-2.png",
-          "code": "public class ChaseState : EnemyState\n{\n    public override void Update()\n    {\n        enemy.MoveTowards(target.position);\n        if (enemy.IsinAttackRange())\n            enemy.ChangeState(new AttackState());\n    }\n}"
+          "code": "private Vector3 FindLeastVisitedPoint(Vector3 center, float radius)\n{\n    List<Vector3> candidates = new List<Vector3>();\n    for (int i = 0; i < 20; i++)\n    {\n        Vector2 rand = Random.insideUnitCircle * radius;\n        Vector3 pos = new Vector3(center.x + rand.x, center.y, center.z + rand.y);\n        if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 2f, NavMesh.AllAreas))\n            candidates.Add(hit.position);\n    }\n\n    Vector3 best = candidates[0];\n    int minVisits = int.MaxValue;\n\n    foreach (var point in candidates)\n    {\n        Vector2Int cell = new Vector2Int(Mathf.FloorToInt(point.x / cellSize), Mathf.FloorToInt(point.z / cellSize));\n        visitCounts.TryGetValue(cell, out int visits);\n        if (visits < minVisits) { minVisits = visits; best = point; }\n    }\n    return best;\n}"
         },
         {
-          "subtitle": "Enemy FSM - Attack Behavior",
-          "description": "The Attack state handles the combat logic. It triggers animations, deals damage, and creates a cooldown window before the enemy can pursue or attack again.",
+          "subtitle": "Enemy Combat Logic",
+          "description": "Enemies smoothly rotate to face the player before initiating attacks. The logic includes distance checks and cooldowns to maintain a balanced but challenging combat experience.",
           "image": "/Portofolio-Website/Imgs/replay-code-enemy-3.png",
-          "code": "public class AttackState : EnemyState\n{\n    public override void Enter()\n    {\n        enemy.animator.SetTrigger(\"Attack\");\n        enemy.StartCoroutine(AttackCooldown());\n    }\n}"
+          "code": "public void Execute()\n{\n    Vector3 dir = (enemy.player.transform.position - enemy.transform.position).normalized;\n    dir.y = 0;\n    if (dir.magnitude > 0.1f)\n    {\n        Quaternion look = Quaternion.LookRotation(dir);\n        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, look, Time.deltaTime * 5f);\n    }\n\n    float distance = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);\n\n    if (Time.time > lastAttackTime + 2f && distance <= 2f)\n    {\n        enemy.animator.SetTrigger(\"Attack\");\n        enemy.playerHealth.TakeDamage(10);\n        lastAttackTime = Time.time;\n    }\n}"
         }
       ],
-      "git": "",
-      "itch": ""
+      "git": "https://github.com/Wolvender/replay-platformer-Wolvender",
+      "itch": "https://wolv3nder.itch.io/replay-platformer"
     },
     {
-      "id": "vr-shooter",
-      "title": "VR Shooter",
-      "tagline": "An immersive VR shooter with realistic weapon handling and enemy AI.",
-      "description": "VR Shooter is an action-packed virtual reality shooter that focuses on realistic weapon mechanics and engaging combat. Players use motion controllers to physically aim, reload, and fire various weapons while facing waves of intelligent enemies.\n\nThis was my second favorite project because it combined the excitement of VR interaction with challenging technical problems like realistic weapon physics, two-handed weapon handling, and performance optimization for VR. The feeling of physically reloading a weapon in VR is incredibly satisfying.\n\nI focused on making every interaction feel natural and responsive, from grabbing weapons to ejecting magazines. The project taught me about VR-specific design patterns, haptic feedback, and how to maintain smooth performance in VR environments.",
-      "thumbnail": "https://picsum.photos/seed/vrshooter/1200/600",
+      "id": "vr-neon-store",
+      "title": "Neon VR Store",
+      "tagline": "A virtual shopping experience with modular systems.",
+      "description": "A virtual reality simulation focused on retail and systems design. I built a modular shopping system that handles product scanning and card-based payments. This project allowed me to dive deep into ScriptableObjects and data-driven design, ensuring that adding new products or modifying prices is a seamless process for the developers.",
+      "thumbnail": "/Portofolio-Website/Imgs/vr-neon-store-thumbnail.png",
       "youtube": "",
       "screenshots": [
-        "https://picsum.photos/seed/vrs1/1200/800",
-        "https://picsum.photos/seed/vrs2/1200/800",
-        "https://picsum.photos/seed/vrs3/1200/800"
+        "/Portofolio-Website/Imgs/vr-store-screenshot-1.png",
+        "/Portofolio-Website/Imgs/vr-store-screenshot-2.png"
       ],
       "tags": [
         "Unity",
         "VR",
-        "XR Toolkit",
-        "Shooter",
-        "Physics"
-      ],
-      "projectRole": "VR Developer",
-      "timeline": "4 weeks",
-      "mechanics": [
-        {
-          "subtitle": "Two-Handed Weapon System",
-          "description": "Weapons can be held with one or two hands for improved stability and accuracy. When grabbing a weapon with the second hand, the weapon's recoil is reduced and aim steadiness increases. The system tracks both controller positions and rotations to calculate the proper weapon orientation. Releasing the secondary hand smoothly transitions back to one-handed mode.",
-          "image": "https://picsum.photos/seed/weapon1/1200/800",
-          "code": "void UpdateTwoHandedGrip()\n{\n    if (secondaryHand != null)\n    {\n        Vector3 direction = secondaryHand.position - primaryHand.position;\n        transform.rotation = Quaternion.LookRotation(direction);\n        recoilMultiplier = 0.5f;\n    }\n}"
-        },
-        {
-          "subtitle": "Physical Reload Mechanics",
-          "description": "Reloading requires physical actions: press a button to eject the magazine, grab a new magazine from your belt, and insert it into the weapon. Each step has proper collision detection and haptic feedback. The magazine socket uses a snap zone that guides the player's hand when the magazine is close enough, making the reload feel smooth and satisfying.",
-          "image": "https://picsum.photos/seed/weapon2/1200/800",
-          "code": "void OnMagazineInserted(Magazine mag)\n{\n    currentMagazine = mag;\n    ammoCount = mag.ammoCapacity;\n    PlayHapticFeedback(0.3f);\n    audioSource.PlayOneShot(reloadSound);\n}"
-        }
-      ],
-      "git": "",
-      "itch": ""
-    },
-    {
-      "id": "vr-winkel",
-      "title": "VR Winkel",
-      "tagline": "A virtual reality shopping experience with realistic product interactions.",
-      "description": "VR Winkel (VR Shop) is a virtual reality shopping simulation that allows users to browse products, pick them up, examine them, and add items to their cart in an immersive 3D environment. The goal was to create a natural shopping experience that feels intuitive and engaging.\n\nThe project focused on realistic object manipulation, UI design in 3D space, and creating a comfortable VR experience that users can navigate without motion sickness. I implemented various interaction methods including direct grab, ray-based selection, and physical shopping cart mechanics.\n\nThis project taught me about VR UX design, spatial UI placement, and how to balance realism with usability in virtual environments.",
-      "thumbnail": "https://picsum.photos/seed/vrshop/1200/600",
-      "youtube": "",
-      "screenshots": [
-        "https://picsum.photos/seed/shop1/1200/800",
-        "https://picsum.photos/seed/shop2/1200/800"
-      ],
-      "tags": [
-        "Unity",
-        "VR",
-        "XR Toolkit",
-        "Simulation",
-        "UI/UX"
-      ],
-      "projectRole": "VR Developer",
-      "timeline": "2 weeks",
-      "mechanics": [
-        {
-          "subtitle": "Product Interaction System",
-          "description": "Products can be picked up, rotated, and examined from all angles using natural hand movements. When holding a product, an information panel appears showing details like price, description, and features. The system uses physics-based interactions so products feel like they have realistic weight and can be placed back on shelves naturally.",
-          "image": "https://picsum.photos/seed/product1/1200/800",
-          "code": "void OnProductGrabbed(Product product)\n{\n    ShowProductInfo(product);\n    ApplyPhysicsProperties(product);\n    EnableHighlight(product, true);\n}"
-        },
-        {
-          "subtitle": "Shopping Cart Mechanics",
-          "description": "The shopping cart follows the player and can be pushed or pulled using the handles. Items can be dropped into the cart, which uses trigger zones to detect when products are added. The cart maintains a list of items and displays the total price on a floating UI panel. Products snap to organized positions inside the cart to prevent clutter.",
-          "image": "https://picsum.photos/seed/cart1/1200/800",
-          "code": "void OnItemAddedToCart(Product item)\n{\n    cartItems.Add(item);\n    totalPrice += item.price;\n    UpdateCartUI();\n    SnapItemToCartPosition(item);\n}"
-        }
-      ],
-      "git": "",
-      "itch": ""
-    },
-    {
-      "id": "invasion",
-      "title": "Invasion",
-      "tagline": "A wave-based defense game where you protect your base from alien invaders.",
-      "description": "Invasion is a wave-based defense game where players must protect their base from increasingly difficult waves of alien enemies. Players can build defensive structures, upgrade weapons, and strategically position themselves to survive as long as possible.\n\nThe project focused on enemy AI, wave progression systems, and resource management. Each wave introduces new enemy types with different behaviors and abilities, requiring players to adapt their strategy. The difficulty curve was carefully balanced through extensive playtesting.\n\nI learned about enemy spawning systems, difficulty scaling, and how to create satisfying progression that keeps players engaged through multiple waves.",
-      "thumbnail": "https://picsum.photos/seed/invasion/1200/600",
-      "youtube": "",
-      "screenshots": [
-        "https://picsum.photos/seed/inv1/1200/800",
-        "https://picsum.photos/seed/inv2/1200/800"
-      ],
-      "tags": [
-        "Unity",
         "C#",
-        "Tower Defense",
-        "AI",
-        "Strategy"
+        "Simulation",
+        "Retail",
+        "Systems"
       ],
-      "projectRole": "Gameplay Programmer",
+      "projectRole": "Systems Developer",
       "timeline": "3 weeks",
       "mechanics": [
         {
-          "subtitle": "Wave Spawning System",
-          "description": "Enemies spawn in waves with increasing difficulty. Each wave has a configuration that defines enemy types, spawn count, and spawn intervals. The system uses spawn points around the map perimeter and balances spawns to prevent overwhelming one side. Between waves, players get a brief preparation period to build defenses and reposition.",
-          "image": "https://picsum.photos/seed/wave1/1200/800",
-          "code": "void SpawnWave(WaveConfig wave)\n{\n    for (int i = 0; i < wave.enemyCount; i++)\n    {\n        SpawnPoint point = GetRandomSpawnPoint();\n        Enemy enemy = Instantiate(wave.enemyPrefab, point.position);\n        yield return new WaitForSeconds(wave.spawnInterval);\n    }\n}"
+          "subtitle": "Product Data & ScriptableObjects",
+          "description": "To manage the variety of items in the store, I used ScriptableObjects for Product Data. This allows for a modular system where each product's name and price are defined as data assets, making it easy to add new items without changing code.",
+          "image": "/Portofolio-Website/Imgs/vr-code-productdata.png",
+          "code": "[CreateAssetMenu(fileName = \"New Product\", menuName = \"Product Data\")]\npublic class ProductData : ScriptableObject\n{\n    public string ProductName;\n    public float Price;\n}"
         },
         {
-          "subtitle": "Enemy AI Pathfinding",
-          "description": "Enemies use NavMesh pathfinding to navigate around obstacles and find the shortest path to the base. Different enemy types have varying speeds and behaviors - some rush directly while others take cover and advance tactically. When enemies reach the base, they attack it until destroyed or the base is destroyed.",
-          "image": "https://picsum.photos/seed/enemy1/1200/800",
-          "code": "void UpdateAI()\n{\n    if (target != null)\n    {\n        agent.SetDestination(target.position);\n        \n        if (Vector3.Distance(transform.position, target.position) < attackRange)\n        {\n            Attack();\n        }\n    }\n}"
+          "subtitle": "Virtual Payment (Pinpas) System",
+          "description": "I built a virtual payment mechanic where players use a 'Pinpas' with a stored saldo. The Kassa Manager calculates the total from scanned ProductData assets and subtracts it from the card's balance after a successful transaction.",
+          "image": "/Portofolio-Website/Imgs/vr-code-pinpas.png",
+          "code": "public void TryPay(Pinpas pinpas)\n{\n    float totalPrice = CalculateTotal();\n    if (pinpas.Saldo >= totalPrice)\n    {\n        pinpas.Saldo -= totalPrice;\n        displaymanger.UpdateDisplay(\"Betaling geslaagd! Nieuw saldo: \u20ac\" + pinpas.Saldo.ToString(\"F2\"));\n    }\n}"
         }
       ],
+      "git": "https://github.com/Wolvender/vr-store-Wolvender",
+      "itch": ""
+    },
+    {
+      "id": "vr-zombie-survival",
+      "title": "Zombie Survival VR",
+      "tagline": "Survive the undead waves with precision and strategy.",
+      "description": "A survival-focused VR combat experience where players must hold their ground against endless waves of zombies. I architected a complex AI system using custom State Machines to manage zombie behavior, and a Coroutine-based wave spawner to handle increasing difficulty curves.\n\nThe project emphasizes satisfying combat mechanics, specifically a precision-based shooting system that rewards headshots, requiring players to stay calm and aim carefully under pressure.",
+      "thumbnail": "/Portofolio-Website/Imgs/vr-zombie-thumbnail.png",
+      "youtube": "",
+      "screenshots": [
+        "/Portofolio-Website/Imgs/vr-zombie-screenshot-1.png",
+        "/Portofolio-Website/Imgs/vr-zombie-screenshot-2.png"
+      ],
+      "tags": [
+        "Unity",
+        "VR",
+        "C#",
+        "Combat",
+        "AI",
+        "Survival"
+      ],
+      "projectRole": "Gameplay & AI Programmer",
+      "timeline": "4 weeks",
+      "mechanics": [
+        {
+          "subtitle": "Zombie State Machine",
+          "description": "The undead enemies use a custom State Machine to manage their autonomous behavior. This includes a Coroutine-based roaming routine that picks random NavMesh positions, switching to high-speed 'Chase' states when the player is detected.",
+          "image": "/Portofolio-Website/Imgs/vr-code-state-machine.png",
+          "code": "IEnumerator RoamRoutine()\n{\n    while (currentState == ZombieState.Roaming)\n    {\n        Vector3 roamTarget = GetRandomRoamPosition();\n        if (agent.isOnNavMesh)\n        {\n            agent.isStopped = false;\n            agent.speed = roamSpeed;\n            agent.SetDestination(roamTarget);\n        }\n        yield return new WaitForSeconds(roamInterval);\n    }\n}"
+        },
+        {
+          "subtitle": "Wave Spawning System",
+          "description": "To keep the pressure on, I implemented a wave-based spawning system using Coroutines. Each wave increases the zombie count, and the system handles the cleanup and wave-clear logic via delegates when a zombie is destroyed.",
+          "image": "/Portofolio-Website/Imgs/vr-code-spawner.png",
+          "code": "IEnumerator WaveRoutine()\n{\n    currentWave++;\n    int zombiesToSpawn = initialZombiesPerWave + (currentWave - 1) * 2;\n    for (int i = 0; i < zombiesToSpawn; i++)\n    {\n        SpawnZombie();\n        yield return new WaitForSeconds(spawnInterval);\n    }\n}"
+        },
+        {
+          "subtitle": "Precision Headshot System",
+          "description": "The gun mechanics are designed to reward precision. Using Raycasts and tag detection, the system identifies if a shot hits the 'Head' tag for an instant kill, or hits another body part for no damage, encouraging players to aim carefully in VR.",
+          "image": "/Portofolio-Website/Imgs/vr-code-gunscript.png",
+          "code": "if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, maxDistance, layermask))\n{\n    ZombieHealth health = hit.collider.gameObject.GetComponentInParent<ZombieHealth>();\n    if (health != null && hit.collider.gameObject.tag == \"Head\")\n    {\n        health.TakeDamage(health.ZombieHP); // Instant Kill\n        Debug.Log(\"Headshot! Zombie dead.\");\n    }\n}"
+        }
+      ],
+      "git": "https://github.com/Wolvender/vr-shooter-druif-development",
+      "itch": ""
+    },
+    {
+      "id": "classified-project-1",
+      "title": "[ PROJECT_CLASSIFIED ]",
+      "tagline": "System module currently under development. Status: ENCRYPTED.",
+      "description": "This project is currently in the development phase. Technical specifications and documentation will be released upon completion of the prototype.",
+      "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
+      "youtube": "",
+      "screenshots": [],
+      "tags": [
+        "Development",
+        "Encrypted",
+        "WIP"
+      ],
+      "projectRole": "Lead Architect",
+      "timeline": "In Progress",
+      "mechanics": [],
+      "git": "",
+      "itch": ""
+    },
+    {
+      "id": "classified-project-2",
+      "title": "[ DATA_REDACTED ]",
+      "tagline": "Neural network integration and autonomous agent testing.",
+      "description": "Deep-level system integration involving autonomous agents and meta-orchestration logic. Documentation is restricted to authorized personnel.",
+      "thumbnail": "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2039&auto=format&fit=crop",
+      "youtube": "",
+      "screenshots": [],
+      "tags": [
+        "AI",
+        "Meta-Orchestrator",
+        "WIP"
+      ],
+      "projectRole": "Systems Engineer",
+      "timeline": "Deep Dev",
+      "mechanics": [],
+      "git": "",
+      "itch": ""
+    },
+    {
+      "id": "classified-project-3",
+      "title": "[ LOGS_PENDING ]",
+      "tagline": "Experimental prototype for high-performance computing.",
+      "description": "Experimental project exploring the boundaries of high-performance rendering and system optimization. Logs will be updated once benchmarks are verified.",
+      "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
+      "youtube": "",
+      "screenshots": [],
+      "tags": [
+        "Optimization",
+        "Research",
+        "WIP"
+      ],
+      "projectRole": "Researcher",
+      "timeline": "Pending",
+      "mechanics": [],
       "git": "",
       "itch": ""
     }

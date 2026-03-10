@@ -11,7 +11,12 @@ export default function ProjectPage() {
     const project = projectData.projects.find(p => p.id === projectId);
 
     if (!project) {
-        return <div className="container mx-auto px-4 py-12 text-center">Project niet gevonden</div>;
+        return (
+            <div className="container mx-auto px-4 py-32 text-center">
+                <h1 className="text-4xl font-bold text-(--accent) mb-4">ACCESS DENIED</h1>
+                <p className="text-(--muted) text-xl">Project not found in database.</p>
+            </div>
+        );
     }
 
     // Find previous and next projects (with looping)

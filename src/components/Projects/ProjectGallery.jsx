@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "../Icons/icons.jsx";
 import { motion, AnimatePresence } from "framer-motion";
+import OptimizedImage from "../OptimizedImage";
 
 export default function ProjectGallery({ project }) {
   const { screenshots, youtube } = project;
@@ -52,7 +53,7 @@ export default function ProjectGallery({ project }) {
 
                 {/* Image Slide */}
                 {slides[currentIndex].type === "image" && (
-                  <img
+                  <OptimizedImage
                     src={slides[currentIndex].src}
                     alt={`Slide ${currentIndex + 1} `}
                     className="w-full h-full object-cover cursor-pointer"

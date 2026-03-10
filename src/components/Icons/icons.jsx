@@ -109,6 +109,42 @@ export function Tech(props) {
   );
 }
 
+export function Terminal(props) {
+  return (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="4 17 10 11 4 5" />
+      <line x1="12" y1="19" x2="20" y2="19" />
+    </svg>
+  );
+}
+
+export function Cpu(props) {
+  return (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <rect x="4" y="4" width="16" height="16" rx="2" ry="2" />
+      <rect x="9" y="9" width="6" height="6" />
+      <line x1="9" y1="1" x2="9" y2="4" />
+      <line x1="15" y1="1" x2="15" y2="4" />
+      <line x1="9" y1="20" x2="9" y2="23" />
+      <line x1="15" y1="20" x2="15" y2="23" />
+      <line x1="20" y1="9" x2="23" y2="9" />
+      <line x1="20" y1="15" x2="23" y2="15" />
+      <line x1="1" y1="9" x2="4" y2="9" />
+      <line x1="1" y1="15" x2="4" y2="15" />
+    </svg>
+  );
+}
+
+export function Layers(props) {
+  return (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="12 2 2 7 12 12 22 7 12 2" />
+      <polyline points="2 17 12 22 22 17" />
+      <polyline points="2 12 12 17 22 12" />
+    </svg>
+  );
+}
+
 export function GitHub(props) {
   return (
     <svg {...props} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -128,7 +164,7 @@ export function LinkedIn(props) {
 export function Itch(props) {
   return (
     <svg {...props} viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-      <path d="M3.13 1.338C2.08 1.96.02 4.328 0 4.95v1.03c0 1.303 1.22 2.45 2.325 2.45 1.33 0 2.436-1.102 2.436-2.41 0 1.308 1.07 2.41 2.4 2.41 1.328 0 2.362-1.102 2.362-2.41 0 1.308 1.137 2.41 2.466 2.41h.024c1.33 0 2.466-1.102 2.466-2.41 0 1.308 1.034 2.41 2.363 2.41 1.33 0 2.4-1.102 2.4-2.41 0 1.308 1.106 2.41 2.435 2.41C22.78 8.43 24 7.283 24 5.98V4.95c-.02-.62-2.08-2.99-3.13-3.612-1.224-.09-4.39-.134-8.87-.134-4.478 0-7.644.044-8.87.134zm2.635 6.95l-.004.025v.02c-.093 1.268-1.043 2.263-2.222 2.457v9.07c0 .69 1.09 1.47 1.96 1.552l.663.123c2.455.4 5.09.605 7.84.605 2.748 0 5.383-.205 7.838-.605l.664-.123c.87-.082 1.96-.862 1.96-1.552v-9.07c-1.18-.194-2.13-1.19-2.223-2.458v-.044c-.086 1.203-1.048 2.177-2.2 2.283-1.2-.076-2.178-1.07-2.258-2.283-.08 1.213-1.058 2.207-2.258 2.283h-.024c-1.2-.076-2.18-1.07-2.258-2.283-.08 1.213-1.058 2.207-2.258 2.283-1.152-.106-2.114-1.08-2.2-2.283zM8.94 11.39h6.12v6.12H8.94v-6.12z" />
+      <path d="M3.13 1.338C2.08 1.96.02 4.328 0 4.95v1.03c0 1.303 1.22 2.45 2.325 2.45 1.33 0 2.436-1.102 2.436-2.41 0 1.308 1.07 2.41 2.4 2.41 1.328 0 2.362-1.102 2.362-2.41 0 1.308 1.137 2.41 2.466 2.41h.024c1.33 0 2.466-1.102 2.466-2.41 0 1.308 1.034 2.41 2.363 2.41 1.33 0 2.4-1.102 2.4-2.41 0 1.308 1.106 2.41 2.435 2.41C22.78 8.43 24 7.283 24 5.98V4.95c-.02-.62-2.08-2.99-3.13-3.612-1.224-.09-4.39-.134-8.87-.134-4.478 0-7.644.044-8.87.134-4.478 0-7.644.044-8.87.134zm2.635 6.95l-.004.025v.02c-.093 1.268-1.043 2.263-2.222 2.457v9.07c0 .69 1.09 1.47 1.96 1.552l.663.123c2.455.4 5.09.605 7.84.605 2.748 0 5.383-.205 7.838-.605l.664-.123c.87-.082 1.96-.862 1.96-1.552v-9.07c-1.18-.194-2.13-1.19-2.223-2.458v-.044c-.086 1.203-1.048 2.177-2.2 2.283-1.2-.076-2.178-1.07-2.258-2.283-.08 1.213-1.058 2.207-2.258 2.283h-.024c-1.2-.076-2.18-1.07-2.258-2.283-.08 1.213-1.058 2.207-2.258 2.283-1.152-.106-2.114-1.08-2.2-2.283zM8.94 11.39h6.12v6.12H8.94v-6.12z" />
     </svg>
   );
 }
@@ -158,6 +194,23 @@ export function X(props) {
   );
 }
 
+export function Copy(props) {
+  return (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+      <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+    </svg>
+  );
+}
+
+export function Check(props) {
+  return (
+    <svg {...props} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" xmlns="http://www.w3.org/2000/svg">
+      <polyline points="20 6 9 17 4 12" />
+    </svg>
+  );
+}
+
 const icons = {
   ArrowLeft,
   ArrowRight,
@@ -167,12 +220,17 @@ const icons = {
   Download,
   Users,
   Tech,
+  Terminal,
+  Cpu,
+  Layers,
   GitHub,
   LinkedIn,
   Itch,
   Envelope,
   Menu,
   X,
+  Copy,
+  Check,
 };
 
 export default icons;

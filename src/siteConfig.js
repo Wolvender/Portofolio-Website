@@ -14,11 +14,11 @@ export const siteConfig = {
   },
 
   aboutLong: `
-    I am a Creative Software Developer specialized in developing games and interactive simulations. With deep experience in Unreal Engine and Unity, I build complex digital worlds that fully immerse users.
+    I’m a creative developer currently studying at Grafisch Lyceum Utrecht. I’ve always loved making things, but right now I’m mostly focused on building games and experimenting with different AI tools and projects.
 
-    My technical expertise encompasses multiple programming languages and game development frameworks. I am equally comfortable with C# and Python for backend logic as with JavaScript for web-based projects. What sets me apart is my ability to translate technical complexity into seamless, intuitive user experiences.
+    On this site, you’ll find a mix of everything I’ve been working on lately. Some of it is official work I’ve done for school, and some of it is just personal projects I’ve built in my own time because I wanted to try out a new idea.
 
-    I believe the best games and simulations emerge when creative vision meets solid technical implementation. I enjoy working with teams to go from concept to full product, always focusing on performance, user experience, and visual quality.
+    I’m really interested in how games and AI can work together to make something feel more interactive and "alive." I’m always trying to learn more and push my projects a bit further, whether it’s a VR experience or a smart tool.
   `,
 
   softSkills: ["Creative Problem Solving", "Teamwork & Collaboration", "Iterative Design", "Communication", "Project Management"],

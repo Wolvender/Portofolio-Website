@@ -1,30 +1,72 @@
 import React from "react";
+import { motion } from "framer-motion";
+import projectData from "../data/projectdata.json";
+import ProjectCard from "../components/ProjectCard";
 
 export default function Projects() {
+  const { projects } = projectData;
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { 
+      opacity: 0, 
+      x: -20,
+      filter: "blur(10px)",
+    },
+    visible: { 
+      opacity: 1, 
+      x: 0,
+      filter: "blur(0px)",
+      transition: {
+        duration: 0.4,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <section>
-      <h1 style={{ marginBottom: "1rem" }}>Projects</h1>
+    <section className="py-20 px-4">
+      <div className="container mx-auto max-w-4xl">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+          className="flex flex-col mb-16"
+        >
+          <h1 className="text-5xl font-bold text-(--text) mb-4 font-mono tracking-tighter uppercase">
+            <span className="text-(--accent)">[</span> data_logs <span className="text-(--accent)">]</span>
+          </h1>
+          <p className="text-xl text-(--muted) max-w-2xl font-mono opacity-80">
+            A linear archive of all projects, technical prototypes, and experiments.
+          </p>
+          <div className="h-px w-full bg-gradient-to-r from-(--accent) to-transparent opacity-20 mt-8" />
+        </motion.div>
 
-      <p style={{ color: "var(--text-muted)" }}>
-        Browse showcased projects below. Click a project link to jump to its showcase section.
-      </p>
-
-      <div className="project-links" style={{ display: "flex", gap: 12, flexWrap: "wrap", marginTop: 16 }}>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <a key={i} href={`#project-${i + 1}`} className="top-box" style={{ minWidth: 140 }}>
-            Project {i + 1}
-          </a>
-        ))}
-      </div>
-
-      <div style={{ marginTop: 28 }}>
-        {Array.from({ length: 6 }).map((_, i) => (
-          <article id={`project-${i + 1}`} key={i} style={{ padding: 20, marginBottom: 20, background: 'linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005))', borderRadius: 12, border: '1px solid rgba(255,255,255,0.03)' }}>
-            <h2>Project {i + 1} — Showcase</h2>
-            <p style={{ color: 'var(--text-muted)' }}>Detailed description, images, links and highlights for project {i + 1}.</p>
-            <div style={{ height: 160, background: 'rgba(0,0,0,0.2)', borderRadius: 8, marginTop: 12 }} />
-          </article>
-        ))}
+        <motion.div 
+          variants={containerVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex flex-col gap-6"
+        >
+          {projects.map((project) => (
+            <motion.div key={project.id} variants={itemVariants}>
+              <ProjectCard
+                project={project}
+                featured={false}
+                layout="list"
+              />
+            </motion.div>
+          ))}
+        </motion.div>
       </div>
     </section>
   );

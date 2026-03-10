@@ -3,16 +3,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #022c22;
+  --bg: #02241c;
+  /* Slightly darker and deeper green for better contrast */
   --surface: #064e3b;
   --text: #ecfdf5;
   --muted: #6ee7b7;
   --accent: #10b981;
-  --accent-hover: #059669;
+  --accent-hover: #34d399;
   --accent-text: #000000;
   --bordercolor: #065f46;
-  --overlay: rgba(0, 0, 0, 0.6);
-  --overlay-hover: rgba(0, 0, 0, 0.8);
+  --overlay: rgba(0, 0, 0, 0.7);
+  /* Darker overlay for readability */
+  --overlay-hover: rgba(0, 0, 0, 0.9);
 
   /* New: Secondary accents for visual depth */
   --accent-secondary: #06b6d4;
@@ -25,13 +27,40 @@
   --radius-md: 0.25rem;
   --radius-lg: 0.5rem;
 
-  --shadow-sm: 0 4px 12px rgba(11, 15, 25, 0.06);
-  --shadow-md: 0 12px 30px rgba(11, 15, 25, 0.12);
-  --shadow-lg: 0 30px 80px rgba(11, 15, 25, 0.18);
+  --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 12px 30px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 30px 80px rgba(0, 0, 0, 0.7);
   --shadow-glow: 0 0 40px rgba(16, 185, 129, 0.25);
 
   --font-main: "Syne Mono", monospace;
   --font-heading: "Share Tech", sans-serif;
+}
+
+/* Custom Scrollbar - Cyberpunk Style */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid var(--bordercolor);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--surface);
+  border: 1px solid var(--accent);
+  border-radius: 0;
+  /* Square edges for mech feel */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--accent);
+  box-shadow: 0 0 10px var(--accent);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--bg);
 }
 
 @keyframes glow-pulse {
@@ -416,12 +445,14 @@ main::after {
 /* ===== APPLE-INSPIRED PREMIUM STYLES ===== */
 
 /* Glassmorphism Header */
+/* Glassmorphism Header */
 .glass-header {
-  background: rgba(2, 44, 34, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  background: rgba(2, 36, 28, 0.9);
+  /* More opaque for readability */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
   will-change: padding, background-color;
 }
 
