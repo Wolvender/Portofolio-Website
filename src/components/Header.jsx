@@ -30,7 +30,7 @@ export default function Header() {
 
   const isActive = (path) => {
     if (path === "/") {
-      return location.pathname === "/" || location.pathname.startsWith("/projects");
+      return location.pathname === "/";
     }
     return location.pathname.startsWith(path);
   };
@@ -40,7 +40,8 @@ export default function Header() {
   };
 
   const navLinks = [
-    { name: "Projects", path: "/" },
+    { name: "Home", path: "/" },
+    { name: "Projects", path: "/projects" },
     { name: "About", path: "/about" },
     { name: "Contact", path: "/contact" },
   ];
@@ -109,15 +110,18 @@ export default function Header() {
           {/* Right Section */}
           <div className="flex justify-end">
             <div className="hidden lg:flex gap-8 items-center">
-              <Link
-                to="/contact"
-                onClick={scrollToTop}
-                className={`nav-link transition-all duration-300 text-sm font-medium ${
-                  isActive("/contact") ? "text-(--accent)" : "text-(--muted) hover:text-(--text)"
-                }`}
-              >
-                Contact
-              </Link>
+              {navLinks.slice(2).map((link) => (
+                <Link
+                  key={link.name}
+                  to={link.path}
+                  onClick={scrollToTop}
+                  className={`nav-link transition-all duration-300 text-sm font-medium ${
+                    isActive(link.path) ? "text-(--accent)" : "text-(--muted) hover:text-(--text)"
+                  }`}
+                >
+                  {link.name}
+                </Link>
+              ))}
               <a
                 href={siteConfig.socials.github}
                 target="_blank"
