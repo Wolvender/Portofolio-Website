@@ -103,17 +103,30 @@ function MechanicCard({ mechanic }) {
                   />
                 </div>
 
-                {/* Result GIF */}
+                {/* Result GIF / Video */}
                 <div className="relative rounded-xl overflow-hidden border border-(--bordercolor) bg-black/20 group/media shadow-inner">
                   <div className="absolute top-3 left-3 z-10 text-[10px] font-bold text-(--accent) uppercase tracking-widest bg-black/40 px-2 py-1 rounded">Behavior Result</div>
-                  <OptimizedImage
-                    src={mechanic.gif || mechanic.image} // Fallback
-                    alt="Result Preview"
-                    className="w-full h-full object-cover group-hover/media:scale-105 transition-transform duration-700"
-                  />
+                  
+                  {mechanic.gif && mechanic.gif.endsWith('.mp4') ? (
+                    <video
+                      src={mechanic.gif}
+                      autoPlay
+                      loop
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover group-hover/media:scale-105 transition-transform duration-700"
+                    />
+                  ) : (
+                    <OptimizedImage
+                      src={mechanic.gif || mechanic.image} // Fallback
+                      alt="Result Preview"
+                      className="w-full h-full object-cover group-hover/media:scale-105 transition-transform duration-700"
+                    />
+                  )}
+                  
                   {!mechanic.gif && (
                     <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 group-hover/media:opacity-100 transition-opacity">
-                      <span className="text-white/60 text-xs text-center px-4 font-mono">Ready for .gif upload!<br />Point 'gif' in JSON to show action.</span>
+                      <span className="text-white/60 text-xs text-center px-4 font-mono">Ready for .gif/.mp4 upload!<br />Point 'gif' in JSON to show action.</span>
                     </div>
                   )}
                 </div>

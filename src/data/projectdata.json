@@ -27,36 +27,87 @@
           "subtitle": "Wall Jump - Detection",
           "description": "Continuous raycasting detects nearby walls, allowing the player to enter a 'Wall Slide' state. This state reduces terminal velocity and enables the wall jump mechanic.",
           "image": "/Portofolio-Website/Imgs/replay-code-walljump-1.png",
-          "gif": "/Portofolio-Website/Imgs/wall-jump-preview.gif",
+          "gif": "/Portofolio-Website/Imgs/Jumpdetection-ezgif.com-video-to-gif-converter.gif",
           "code": "private void CheckForWalls()\n{\n    isWallSliding = false;\n    \n    // Check left and right for wall collision\n    bool rightWall = Physics2D.Raycast(transform.position, Vector2.right, wallCheckDistance, wallLayer);\n    bool leftWall = Physics2D.Raycast(transform.position, Vector2.left, wallCheckDistance, wallLayer);\n\n    if ((rightWall || leftWall) && !isGrounded && rb.velocity.y < 0)\n    {\n        isWallSliding = true;\n        wallDir = rightWall ? 1 : -1;\n    }\n}"
         },
         {
           "subtitle": "Wall Jump - Execution",
           "description": "Executing a jump while sliding applies an instantaneous impulse force away from the wall and upwards. A brief 'jump lock' prevents immediate redirection, ensuring a consistent arc.",
           "image": "/Portofolio-Website/Imgs/replay-code-walljump-2.png",
+          "gif": "/Portofolio-Website/Imgs/wall-jump-preview.gif",
           "code": "public void WallJump()\n{\n    if (isWallSliding)\n    {\n        // Apply force in opposite direction of wall\n        Vector2 force = new Vector2(-wallDir * wallJumpForce.x, wallJumpForce.y);\n        rb.velocity = Vector2.zero; // Reset momentum\n        rb.AddForce(force, ForceMode2D.Impulse);\n        \n        StartCoroutine(DisableMovement(0.15s)); // Brief lock\n    }\n}"
         },
         {
           "subtitle": "Enemy State Machine",
           "description": "A robust Finite State Machine (FSM) manages complex enemy behaviors, including Roaming, Chasing, and Attacking. This architecture allows for clean transitions and modular AI logic.",
           "image": "/Portofolio-Website/Imgs/replay-code-enemy-1.png",
+          "gif": "/Portofolio-Website/Imgs/FSMenemyplatformer-ezgif.com-video-to-gif-converter.gif",
           "code": "void Start()\n{\n    // Cache references\n    agent = GetComponent<NavMeshAgent>();\n    animator = GetComponent<Animator>();\n    player = GameObject.FindWithTag(\"Player\");\n    playerHealth = player.GetComponent<PlayerHealthManager>();\n\n    // Initialize states\n    roamState = new EnemyRoamState(this);\n    chaseState = new EnemyChaseState(this);\n    attackState = new EnemyAttackState(this);\n    dieState = new EnemyDieState(this);\n\n    // Start in Roaming\n    ChangeState(roamState);\n}"
         },
         {
           "subtitle": "Heatmap-Based Roaming",
           "description": "To create more natural exploration, enemies use a 'visit count' heatmap. They periodically sample nearby points and prioritize those they haven't visited recently, ensuring thorough coverage of the environment.",
           "image": "/Portofolio-Website/Imgs/replay-code-enemy-2.png",
+          "gif": "/Portofolio-Website/Imgs/FSMenemyplatformerroaming-ezgif.com-video-to-gif-converter.gif",
           "code": "private Vector3 FindLeastVisitedPoint(Vector3 center, float radius)\n{\n    List<Vector3> candidates = new List<Vector3>();\n    for (int i = 0; i < 20; i++)\n    {\n        Vector2 rand = Random.insideUnitCircle * radius;\n        Vector3 pos = new Vector3(center.x + rand.x, center.y, center.z + rand.y);\n        if (NavMesh.SamplePosition(pos, out NavMeshHit hit, 2f, NavMesh.AllAreas))\n            candidates.Add(hit.position);\n    }\n\n    Vector3 best = candidates[0];\n    int minVisits = int.MaxValue;\n\n    foreach (var point in candidates)\n    {\n        Vector2Int cell = new Vector2Int(Mathf.FloorToInt(point.x / cellSize), Mathf.FloorToInt(point.z / cellSize));\n        visitCounts.TryGetValue(cell, out int visits);\n        if (visits < minVisits) { minVisits = visits; best = point; }\n    }\n    return best;\n}"
-        },
-        {
-          "subtitle": "Enemy Combat Logic",
-          "description": "Enemies smoothly rotate to face the player before initiating attacks. The logic includes distance checks and cooldowns to maintain a balanced but challenging combat experience.",
-          "image": "/Portofolio-Website/Imgs/replay-code-enemy-3.png",
-          "code": "public void Execute()\n{\n    Vector3 dir = (enemy.player.transform.position - enemy.transform.position).normalized;\n    dir.y = 0;\n    if (dir.magnitude > 0.1f)\n    {\n        Quaternion look = Quaternion.LookRotation(dir);\n        enemy.transform.rotation = Quaternion.Slerp(enemy.transform.rotation, look, Time.deltaTime * 5f);\n    }\n\n    float distance = Vector3.Distance(enemy.transform.position, enemy.player.transform.position);\n\n    if (Time.time > lastAttackTime + 2f && distance <= 2f)\n    {\n        enemy.animator.SetTrigger(\"Attack\");\n        enemy.playerHealth.TakeDamage(10);\n        lastAttackTime = Time.time;\n    }\n}"
         }
       ],
       "git": "https://github.com/Wolvender/replay-platformer-Wolvender",
       "itch": "https://wolv3nder.itch.io/replay-platformer"
+    },
+    {
+      "id": "ai-agent-enemies",
+      "title": "AI Agent Enemies",
+      "tagline": "A wave-based arena game featuring LLM-driven enemy AI.",
+      "description": "A prototype wave game built in Godot, starring an enemy AI powered by the Groq API (LLM). The AI acts as an unhinged villain, evaluating its health, the distance to the player, and whether it's stuck. It uses this context to choose from an arsenal of tactical behaviors (Chase, Attack, Search, Retreat, Strafe, Seek Cover) and dynamically reacts to the player's movements. This was an exploration into creating non-deterministic, highly responsive enemies in a traditional action-combat loop.",
+      "thumbnail": "/Portofolio-Website/Imgs/HeaderAI.png",
+      "youtube": "",
+      "screenshots": [
+        "/Portofolio-Website/Imgs/StartScreenAI.png",
+        "/Portofolio-Website/Imgs/EnemyHurtAIsc.png",
+        "/Portofolio-Website/Imgs/DeathScreenAI.png"
+      ],
+      "tags": [
+        "Godot",
+        "GDScript",
+        "AI / LLMs",
+        "Groq API",
+        "Systems Design"
+      ],
+      "projectRole": "Lead Developer & AI Architect",
+      "timeline": "4 weeks",
+      "mechanics": [
+        {
+          "subtitle": "AI Decision Engine",
+          "description": "Enemies send their current state (health, memory of past events, distance, line of sight, etc.) to an LLM via the Groq API. The LLM evaluates the situation and decides on a tactical state, outputting both a strategic choice (like RETREAT or STRAFE) and an in-character thought bubble.",
+          "image": "",
+          "gif": "/Portofolio-Website/Imgs/fsm-enemy-ai-attack.mp4",
+          "code": "var prompt = \"\"\"\nYou are the persistent, unhinged brain of an enemy in a 3D action game.\nYou remember everything that has happened this session...\n\n=== CURRENT SITUATION ===\n- Health: %s%%\n- Distance to player: %s units\n- Current state: %s\n- Stuck on obstacle: %s\n\n=== DECISION RULES ===\n- If you have been stuck multiple times, try SEEK_COVER or STRAFE instead.\n- If health < 30%%: strongly consider RETREAT.\n- Do NOT keep repeating the same failing state.\n\"\"\"\n\nvar body = JSON.stringify({\n    \"model\": \"groq/compound\",\n    \"messages\": [{\"role\": \"user\", \"content\": prompt}]\n})"
+        },
+        {
+          "subtitle": "Enemy State Machine",
+          "description": "The enemy's physical actions are executed via a robust Finite State Machine in GDScript. Once the LLM returns a decision like 'SEARCH', the enemy uses NavigationAgent3D to generate fan-out waypoints and investigates the last known player position, handling physics natively.",
+          "image": "",
+          "gif": "/Portofolio-Website/Imgs/roaming-ai-states.mp4",
+          "code": "func _build_search_waypoints() -> Array[Vector3]:\n    # First visit the last known position, then fan outward\n    var points: Array[Vector3] = []\n    points.append(last_known_player_pos)\n\n    var base_dir = (last_known_player_pos - global_position).normalized()\n    var angles   = [-60.0, -20.0, 20.0, 60.0]\n    for a in angles:\n        var dir = base_dir.rotated(Vector3.UP, deg_to_rad(a))\n        points.append(last_known_player_pos + dir * randf_range(2.5, 5.0))\n\n    return points"
+        },
+        {
+          "subtitle": "Movement & Momentum (Player)",
+          "description": "A responsive 3D character controller built entirely in GDScript, featuring jump buffering, coyote time, and heavy camera-shake juice upon taking hits or performing attacks.",
+          "image": "",
+          "gif": "/Portofolio-Website/Imgs/player-movement-ai.mp4",
+          "code": "# Coyote time\nif was_on_floor and not is_on_floor():\n    coyote_time = COYOTE_DURATION\n\n# Jump buffer\nif Input.is_action_just_pressed(\"ui_accept\"):\n    jump_buffer = JUMP_BUFFER_DURATION\n\n# Jump with coyote + buffer\nif jump_buffer > 0:\n    if is_on_floor() or coyote_time > 0:\n        velocity.y = jump_velocity\n        jump_buffer = 0.0\n        coyote_time = 0.0"
+        },
+        {
+          "subtitle": "Wave Spawning System",
+          "description": "A structured arena wave manager. Spawners operate independently, tracking active enemies and escalating wave counts, while dynamically spawning health pickups and monitoring for a total clear condition.",
+          "image": "",
+          "gif": "/Portofolio-Website/Imgs/wave-system-ai.mp4",
+          "code": "func check_wave_completion() -> void:\n    if current_enemy_count > 0: return\n    \n    var all_spawners_cleared = true\n    var other_spawners = get_tree().get_nodes_in_group(\"spawners\")\n    \n    for spawner in other_spawners:\n        if is_instance_valid(spawner) and spawner.current_enemy_count > 0:\n            all_spawners_cleared = false\n            break\n            \n    if all_spawners_cleared:\n        for spawner in other_spawners:\n            if spawner.has_method(\"end_wave\"):\n                spawner.end_wave()"
+        }
+      ],
+      "git": "",
+      "itch": ""
     },
     {
       "id": "vr-neon-store",
@@ -90,7 +141,7 @@
           "subtitle": "Virtual Payment (Pinpas) System",
           "description": "I built a virtual payment mechanic where players use a 'Pinpas' with a stored saldo. The Kassa Manager calculates the total from scanned ProductData assets and subtracts it from the card's balance after a successful transaction.",
           "image": "/Portofolio-Website/Imgs/vr-code-pinpas.png",
-          "code": "public void TryPay(Pinpas pinpas)\n{\n    float totalPrice = CalculateTotal();\n    if (pinpas.Saldo >= totalPrice)\n    {\n        pinpas.Saldo -= totalPrice;\n        displaymanger.UpdateDisplay(\"Betaling geslaagd! Nieuw saldo: \u20ac\" + pinpas.Saldo.ToString(\"F2\"));\n    }\n}"
+          "code": "public void TryPay(Pinpas pinpas)\n{\n    float totalPrice = CalculateTotal();\n    if (pinpas.Saldo >= totalPrice)\n    {\n        pinpas.Saldo -= totalPrice;\n        displaymanger.UpdateDisplay(\"Betaling geslaagd! Nieuw saldo: €\" + pinpas.Saldo.ToString(\"F2\"));\n    }\n}"
         }
       ],
       "git": "https://github.com/Wolvender/vr-store-Wolvender",
@@ -138,25 +189,6 @@
         }
       ],
       "git": "https://github.com/Wolvender/vr-shooter-druif-development",
-      "itch": ""
-    },
-    {
-      "id": "classified-project-1",
-      "title": "[ PROJECT_CLASSIFIED ]",
-      "tagline": "System module currently under development. Status: ENCRYPTED.",
-      "description": "This project is currently in the development phase. Technical specifications and documentation will be released upon completion of the prototype.",
-      "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop",
-      "youtube": "",
-      "screenshots": [],
-      "tags": [
-        "Development",
-        "Encrypted",
-        "WIP"
-      ],
-      "projectRole": "Lead Architect",
-      "timeline": "In Progress",
-      "mechanics": [],
-      "git": "",
       "itch": ""
     },
     {
