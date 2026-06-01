@@ -80,28 +80,28 @@
         {
           "subtitle": "AI Decision Engine",
           "description": "Enemies send their current state (health, memory of past events, distance, line of sight, etc.) to an LLM via the Groq API. The LLM evaluates the situation and decides on a tactical state, outputting both a strategic choice (like RETREAT or STRAFE) and an in-character thought bubble.",
-          "image": "",
+          "image": "/Portofolio-Website/Imgs/enemy ai decision making.png",
           "gif": "/Portofolio-Website/Imgs/fsm-enemy-ai-attack.mp4",
           "code": "var prompt = \"\"\"\nYou are the persistent, unhinged brain of an enemy in a 3D action game.\nYou remember everything that has happened this session...\n\n=== CURRENT SITUATION ===\n- Health: %s%%\n- Distance to player: %s units\n- Current state: %s\n- Stuck on obstacle: %s\n\n=== DECISION RULES ===\n- If you have been stuck multiple times, try SEEK_COVER or STRAFE instead.\n- If health < 30%%: strongly consider RETREAT.\n- Do NOT keep repeating the same failing state.\n\"\"\"\n\nvar body = JSON.stringify({\n    \"model\": \"groq/compound\",\n    \"messages\": [{\"role\": \"user\", \"content\": prompt}]\n})"
         },
         {
           "subtitle": "Enemy State Machine",
           "description": "The enemy's physical actions are executed via a robust Finite State Machine in GDScript. Once the LLM returns a decision like 'SEARCH', the enemy uses NavigationAgent3D to generate fan-out waypoints and investigates the last known player position, handling physics natively.",
-          "image": "",
+          "image": "/Portofolio-Website/Imgs/enmey ai state machine ai agent.png",
           "gif": "/Portofolio-Website/Imgs/roaming-ai-states.mp4",
           "code": "func _build_search_waypoints() -> Array[Vector3]:\n    # First visit the last known position, then fan outward\n    var points: Array[Vector3] = []\n    points.append(last_known_player_pos)\n\n    var base_dir = (last_known_player_pos - global_position).normalized()\n    var angles   = [-60.0, -20.0, 20.0, 60.0]\n    for a in angles:\n        var dir = base_dir.rotated(Vector3.UP, deg_to_rad(a))\n        points.append(last_known_player_pos + dir * randf_range(2.5, 5.0))\n\n    return points"
         },
         {
           "subtitle": "Movement & Momentum (Player)",
           "description": "A responsive 3D character controller built entirely in GDScript, featuring jump buffering, coyote time, and heavy camera-shake juice upon taking hits or performing attacks.",
-          "image": "",
+          "image": "/Portofolio-Website/Imgs/player movement enemy ai .png",
           "gif": "/Portofolio-Website/Imgs/player-movement-ai.mp4",
           "code": "# Coyote time\nif was_on_floor and not is_on_floor():\n    coyote_time = COYOTE_DURATION\n\n# Jump buffer\nif Input.is_action_just_pressed(\"ui_accept\"):\n    jump_buffer = JUMP_BUFFER_DURATION\n\n# Jump with coyote + buffer\nif jump_buffer > 0:\n    if is_on_floor() or coyote_time > 0:\n        velocity.y = jump_velocity\n        jump_buffer = 0.0\n        coyote_time = 0.0"
         },
         {
           "subtitle": "Wave Spawning System",
           "description": "A structured arena wave manager. Spawners operate independently, tracking active enemies and escalating wave counts, while dynamically spawning health pickups and monitoring for a total clear condition.",
-          "image": "",
+          "image": "/Portofolio-Website/Imgs/enemy wave spawning system enemy ai.png",
           "gif": "/Portofolio-Website/Imgs/wave-system-ai.mp4",
           "code": "func check_wave_completion() -> void:\n    if current_enemy_count > 0: return\n    \n    var all_spawners_cleared = true\n    var other_spawners = get_tree().get_nodes_in_group(\"spawners\")\n    \n    for spawner in other_spawners:\n        if is_instance_valid(spawner) and spawner.current_enemy_count > 0:\n            all_spawners_cleared = false\n            break\n            \n    if all_spawners_cleared:\n        for spawner in other_spawners:\n            if spawner.has_method(\"end_wave\"):\n                spawner.end_wave()"
         }
@@ -110,122 +110,114 @@
       "itch": ""
     },
     {
-      "id": "vr-neon-store",
-      "title": "Neon VR Store",
-      "tagline": "A virtual shopping experience with modular systems.",
-      "description": "A virtual reality simulation focused on retail and systems design. I built a modular shopping system that handles product scanning and card-based payments. This project allowed me to dive deep into ScriptableObjects and data-driven design, ensuring that adding new products or modifying prices is a seamless process for the developers.",
-      "thumbnail": "/Portofolio-Website/Imgs/vr-neon-store-thumbnail.png",
+      "id": "vr-shooter",
+      "title": "VR Shooter",
+      "tagline": "A wave-based VR combat experience with modular AI enemies and satisfying feedback systems.",
+      "description": "A VR shooter built in Unity featuring multiple enemy archetypes, a multi-phase boss, and a responsive combat feedback system. Each enemy type is built on a shared FSM base class, allowing for clean code reuse while enabling distinct behaviors — from exploding kamikazes to projectile-firing bartenders.\n\nThe project pushed me to think carefully about how enemy variety creates tactical depth without complexity, and how small feedback details like a damage vignette make hits feel impactful in VR.",
+      "thumbnail": "",
+      "headerVideo": "/Portofolio-Website/Videos/2025-07-08 10-22-42.mp4",
       "youtube": "",
-      "screenshots": [
-        "/Portofolio-Website/Imgs/vr-store-screenshot-1.png",
-        "/Portofolio-Website/Imgs/vr-store-screenshot-2.png"
-      ],
+      "screenshots": [],
       "tags": [
         "Unity",
         "VR",
         "C#",
-        "Simulation",
-        "Retail",
-        "Systems"
-      ],
-      "projectRole": "Systems Developer",
-      "timeline": "3 weeks",
-      "mechanics": [
-        {
-          "subtitle": "Product Data & ScriptableObjects",
-          "description": "To manage the variety of items in the store, I used ScriptableObjects for Product Data. This allows for a modular system where each product's name and price are defined as data assets, making it easy to add new items without changing code.",
-          "image": "/Portofolio-Website/Imgs/vr-code-productdata.png",
-          "code": "[CreateAssetMenu(fileName = \"New Product\", menuName = \"Product Data\")]\npublic class ProductData : ScriptableObject\n{\n    public string ProductName;\n    public float Price;\n}"
-        },
-        {
-          "subtitle": "Virtual Payment (Pinpas) System",
-          "description": "I built a virtual payment mechanic where players use a 'Pinpas' with a stored saldo. The Kassa Manager calculates the total from scanned ProductData assets and subtracts it from the card's balance after a successful transaction.",
-          "image": "/Portofolio-Website/Imgs/vr-code-pinpas.png",
-          "code": "public void TryPay(Pinpas pinpas)\n{\n    float totalPrice = CalculateTotal();\n    if (pinpas.Saldo >= totalPrice)\n    {\n        pinpas.Saldo -= totalPrice;\n        displaymanger.UpdateDisplay(\"Betaling geslaagd! Nieuw saldo: €\" + pinpas.Saldo.ToString(\"F2\"));\n    }\n}"
-        }
-      ],
-      "git": "https://github.com/Wolvender/vr-store-Wolvender",
-      "itch": ""
-    },
-    {
-      "id": "vr-zombie-survival",
-      "title": "Zombie Survival VR",
-      "tagline": "Survive the undead waves with precision and strategy.",
-      "description": "A survival-focused VR combat experience where players must hold their ground against endless waves of zombies. I architected a complex AI system using custom State Machines to manage zombie behavior, and a Coroutine-based wave spawner to handle increasing difficulty curves.\n\nThe project emphasizes satisfying combat mechanics, specifically a precision-based shooting system that rewards headshots, requiring players to stay calm and aim carefully under pressure.",
-      "thumbnail": "/Portofolio-Website/Imgs/vr-zombie-thumbnail.png",
-      "youtube": "",
-      "screenshots": [
-        "/Portofolio-Website/Imgs/vr-zombie-screenshot-1.png",
-        "/Portofolio-Website/Imgs/vr-zombie-screenshot-2.png"
-      ],
-      "tags": [
-        "Unity",
-        "VR",
-        "C#",
-        "Combat",
         "AI",
-        "Survival"
+        "Combat",
+        "Systems"
       ],
       "projectRole": "Gameplay & AI Programmer",
       "timeline": "4 weeks",
       "mechanics": [
         {
-          "subtitle": "Zombie State Machine",
-          "description": "The undead enemies use a custom State Machine to manage their autonomous behavior. This includes a Coroutine-based roaming routine that picks random NavMesh positions, switching to high-speed 'Chase' states when the player is detected.",
-          "image": "/Portofolio-Website/Imgs/vr-code-state-machine.png",
-          "code": "IEnumerator RoamRoutine()\n{\n    while (currentState == ZombieState.Roaming)\n    {\n        Vector3 roamTarget = GetRandomRoamPosition();\n        if (agent.isOnNavMesh)\n        {\n            agent.isStopped = false;\n            agent.speed = roamSpeed;\n            agent.SetDestination(roamTarget);\n        }\n        yield return new WaitForSeconds(roamInterval);\n    }\n}"
+          "subtitle": "FSM Enemy AI",
+          "description": "All enemies share a base Finite State Machine with four states: Roam, Lock, Attack, and Die. Roaming uses NavMesh sampling to pick valid positions in world geometry. State transitions use distance hysteresis — detecting the player at 20m but only losing sight at 24m — to prevent constant flickering between states.",
+          "image": "/Portofolio-Website/Imgs/Vr shooter fsm.png",
+          "gif": "",
+          "code": "private Vector3 GetRandomPointOnNavMesh(Vector3 center, float radius)\n{\n    Vector3 randomDirection = Random.insideUnitSphere * radius;\n    randomDirection += center;\n    if (NavMesh.SamplePosition(randomDirection, out NavMeshHit hit, radius, NavMesh.AllAreas))\n        return hit.position;\n    return center;\n}"
         },
         {
-          "subtitle": "Wave Spawning System",
-          "description": "To keep the pressure on, I implemented a wave-based spawning system using Coroutines. Each wave increases the zombie count, and the system handles the cleanup and wave-clear logic via delegates when a zombie is destroyed.",
-          "image": "/Portofolio-Website/Imgs/vr-code-spawner.png",
-          "code": "IEnumerator WaveRoutine()\n{\n    currentWave++;\n    int zombiesToSpawn = initialZombiesPerWave + (currentWave - 1) * 2;\n    for (int i = 0; i < zombiesToSpawn; i++)\n    {\n        SpawnZombie();\n        yield return new WaitForSeconds(spawnInterval);\n    }\n}"
+          "subtitle": "Exploding Enemy (FSM Subclass)",
+          "description": "The ExplodingEnemy inherits from the base FSM and overrides the Attack state. Instead of melee damage it closes the gap and detonates — spawning a VFX prefab, dealing AOE damage, and destroying itself. This forces the player to kite and creates a different threat compared to melee enemies.",
+          "image": "",
+          "gif": "",
+          "code": "protected override void DoAttacking()\n{\n    float distanceToPlayer = Vector3.Distance(transform.position, playerObj.transform.position);\n    if (distanceToPlayer <= explosionRange)\n    {\n        Instantiate(explosionEffectPrefab, transform.position, Quaternion.identity);\n        playerManager.PlayerHealthProperty -= explosionDamage;\n        Destroy(gameObject);\n    }\n    else\n    {\n        agent.SetDestination(playerObj.transform.position);\n    }\n}"
         },
         {
-          "subtitle": "Precision Headshot System",
-          "description": "The gun mechanics are designed to reward precision. Using Raycasts and tag detection, the system identifies if a shot hits the 'Head' tag for an instant kill, or hits another body part for no damage, encouraging players to aim carefully in VR.",
-          "image": "/Portofolio-Website/Imgs/vr-code-gunscript.png",
-          "code": "if (Physics.Raycast(rayOrigin, rayDirection, out RaycastHit hit, maxDistance, layermask))\n{\n    ZombieHealth health = hit.collider.gameObject.GetComponentInParent<ZombieHealth>();\n    if (health != null && hit.collider.gameObject.tag == \"Head\")\n    {\n        health.TakeDamage(health.ZombieHP); // Instant Kill\n        Debug.Log(\"Headshot! Zombie dead.\");\n    }\n}"
+          "subtitle": "Bartender Enemy — Arcing Projectiles",
+          "description": "A stationary turret enemy that locks its rotation on the horizontal axis only (preventing jittery vertical aiming) then fires with a +1.5 unit upward bias. This creates naturally arcing bottle trajectories that feel dynamic without implementing real ballistic physics.",
+          "image": "/Portofolio-Website/Imgs/bartender vr shooter.png",
+          "gif": "",
+          "code": "Vector3 targetDir = player.transform.position - visual.position;\ntargetDir.y = 0f;\nQuaternion lookRot = Quaternion.LookRotation(targetDir);\nvisual.rotation = lookRot * Quaternion.Euler(0, 90f, 0);\n\nif (Time.time - lastShootTime >= shootCooldown)\n{\n    Vector3 direction = (player.transform.position + Vector3.up * 1.5f - firePoint.position).normalized;\n    rb.AddForce(direction * shootForce, ForceMode.Impulse);\n}"
+        },
+        {
+          "subtitle": "Boss — Multi-Cannon Fire Pattern",
+          "description": "The boss cycles through an array of fire points in round-robin order, creating spread bullet patterns. Each cannon fires a physics-driven projectile toward the player's current position. On defeat, a victory state triggers confetti and explosion effects.",
+          "image": "/Portofolio-Website/Imgs/boss attack vr shooter.png",
+          "gif": "",
+          "code": "void FireAtPlayer()\n{\n    Transform firePoint = firePoints[currentIndex];\n    Vector3 direction = (player.position - firePoint.position).normalized;\n    GameObject projectile = Instantiate(projectilePrefab, firePoint.position, Quaternion.LookRotation(direction));\n    Rigidbody rb = projectile.GetComponent<Rigidbody>();\n    if (rb != null) rb.linearVelocity = direction * 10f;\n}\n\ncurrentIndex = (currentIndex + 1) % firePoints.Length;"
+        },
+        {
+          "subtitle": "Blood Vignette Damage Feedback",
+          "description": "Health is exposed as a C# property. Every time damage is taken, the delta is mapped to a screen-edge vignette alpha that fades over time. Larger hits produce a stronger flash. This runs entirely through the property setter — no polling, no Update check — keeping the feedback tightly coupled to the damage event.",
+          "image": "/Portofolio-Website/Imgs/player blood overlay vrshooters.png",
+          "gif": "",
+          "code": "public float PlayerHealthProperty\n{\n    set\n    {\n        float damageTaken = PlayerHealth - Mathf.Clamp(value, 0, MaxHealth);\n        PlayerHealth = Mathf.Clamp(value, 0, MaxHealth);\n\n        if (damageTaken > 0)\n            ShowBloodOverlay(damageTaken);\n\n        if (PlayerHealth <= 0f)\n        {\n            PlayerLife--;\n            if (PlayerLife <= 0) PlayerDeathUI();\n            else Respawn();\n        }\n    }\n}\n\nvoid ShowBloodOverlay(float damageAmount)\n{\n    bloodAlpha += damageAmount / MaxHealth;\n    bloodAlpha = Mathf.Clamp01(bloodAlpha);\n}"
         }
       ],
       "git": "https://github.com/Wolvender/vr-shooter-druif-development",
       "itch": ""
     },
     {
-      "id": "classified-project-2",
-      "title": "[ DATA_REDACTED ]",
-      "tagline": "Neural network integration and autonomous agent testing.",
-      "description": "Deep-level system integration involving autonomous agents and meta-orchestration logic. Documentation is restricted to authorized personnel.",
-      "thumbnail": "https://images.unsplash.com/photo-1639322537228-f710d846310a?q=80&w=2039&auto=format&fit=crop",
+      "id": "ai-data-entry",
+      "title": "AI Data Entry Agent",
+      "tagline": "LLM-powered document extraction with multi-tenant architecture.",
+      "description": "An intelligent document processing system built in Python that uses LLM agents to automatically extract structured data from unstructured files — invoices, inventory lists, ledgers. Users upload a document and the system classifies it, selects the right extraction schema, runs it through Groq's LLM API, validates the output, and returns a clean downloadable result.\n\nBuilt with a pluggable registry pattern so new document types can be added without touching core extraction logic. Includes multi-user authentication, per-user data isolation, subscription-tier rate limiting, and cost tracking — production-ready architecture, not a prototype.",
+      "thumbnail": "",
+      "headerVideo": "",
+      "codeThumb": "# Classify -> Route -> Extract\ndoc_type = router.classify(text)\nplugin   = registry.get(doc_type)\n\nstructured_llm = llm.with_structured_output(\n    plugin.schema\n)\nresult = structured_llm.invoke(prompt)\n\n# EU format: \"1.234,56\" -> \"1234.56\"\nif \",\" in val and \".\" in val:\n    if val.find(\".\") < val.find(\",\"):\n        val = val.replace(\".\", \"\")\n        val = val.replace(\",\", \".\")\n\n# Per-user data isolation\ndef get_history_file(self):\n    user = get_current_username()\n    return f\"{base}_{user}{ext}\"\n\n# Sliding-window rate limiter\nself._requests[user] = [\n    t for t in self._requests[user]\n    if t > window_start\n]\nif len(self._requests[user]) >= self.max_requests:\n    raise RateLimitExceeded()",
       "youtube": "",
       "screenshots": [],
       "tags": [
-        "AI",
-        "Meta-Orchestrator",
-        "WIP"
+        "Python",
+        "LangChain",
+        "Groq API",
+        "LLM",
+        "Streamlit",
+        "Systems"
       ],
-      "projectRole": "Systems Engineer",
-      "timeline": "Deep Dev",
-      "mechanics": [],
-      "git": "",
-      "itch": ""
-    },
-    {
-      "id": "classified-project-3",
-      "title": "[ LOGS_PENDING ]",
-      "tagline": "Experimental prototype for high-performance computing.",
-      "description": "Experimental project exploring the boundaries of high-performance rendering and system optimization. Logs will be updated once benchmarks are verified.",
-      "thumbnail": "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop",
-      "youtube": "",
-      "screenshots": [],
-      "tags": [
-        "Optimization",
-        "Research",
-        "WIP"
+      "projectRole": "Full-Stack Developer",
+      "timeline": "3 weeks",
+      "mechanics": [
+        {
+          "subtitle": "Pluggable Document Router",
+          "description": "Instead of hardcoding extraction logic per document type, the system uses a registry pattern. A zero-temperature LLM classifies the uploaded document (invoice, inventory, ledger), then the router fetches the matching Pydantic schema from the registry and binds it to the LLM at runtime. Adding a new document type is one new schema class — no changes to the core pipeline.",
+          "image": "",
+          "gif": "",
+          "code": "doc_type = router.classify(text)\nplugin = registry.get(doc_type)\n\nstructured_llm = llm.with_structured_output(\n    plugin.schema\n)\nresult = structured_llm.invoke(prompt).model_dump()"
+        },
+        {
+          "subtitle": "Locale-Aware Number Parsing",
+          "description": "Real-world documents use inconsistent number formats — European invoices write 1.234,56 where US invoices write 1,234.56. The parser detects which separator is the thousands marker vs the decimal marker using position heuristics, then normalises to a canonical float. Currency symbols are also mapped to ISO codes, with unknown codes preserved rather than dropped.",
+          "image": "",
+          "gif": "",
+          "code": "if \",\" in value and \".\" in value:\n    if value.find(\".\") < value.find(\",\"):\n        # Dot is thousands separator (EU format)\n        value = value.replace(\".\", \"\").replace(\",\", \".\")\n\ncurrency_map = {\"eur\": \"EUR\", \"usd\": \"USD\", \"gbp\": \"GBP\"}\ncurrency = currency_map.get(raw.lower(), raw.upper())"
+        },
+        {
+          "subtitle": "Per-User Data Isolation",
+          "description": "Streamlit reruns the entire script on every interaction, which can cause data leakage between users in multi-tenant deployments. Each user gets their own isolated history file generated dynamically from their username. No user can ever see another user's processed documents, even across hot reloads.",
+          "image": "",
+          "gif": "",
+          "code": "def get_history_file(self):\n    username = get_current_username()\n    name, ext = os.path.splitext(self.history_file)\n    user_file = f\"{name}_{username}{ext}\"\n    return os.path.join(directory, user_file)"
+        },
+        {
+          "subtitle": "Sliding-Window Rate Limiter",
+          "description": "A custom rate limiter that survives process restarts by persisting request timestamps to disk. It uses a sliding window (not fixed buckets) so limits are fair regardless of when in a window a user starts. Rate limits are subscription-tier-aware, and integrated cost tracking (tokens × pricing model) enforces per-user budgets automatically.",
+          "image": "",
+          "gif": "",
+          "code": "now = time.time()\nwindow_start = now - self.window_seconds\n\nself._requests[user] = [\n    t for t in self._requests[user]\n    if t > window_start\n]\n\nif len(self._requests[user]) >= self.max_requests:\n    raise RateLimitExceeded()\n\nself._requests[user].append(now)\nself._persist()"
+        }
       ],
-      "projectRole": "Researcher",
-      "timeline": "Pending",
-      "mechanics": [],
       "git": "",
       "itch": ""
     }

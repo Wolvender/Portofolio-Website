@@ -66,16 +66,51 @@ export default function ProjectCard({ project, featured = false, layout = "grid"
 
       {/* Optimized Thumbnail with parallax container */}
       <div className={`relative overflow-hidden ${isFeatured ? 'aspect-[16/10]' : isList ? 'aspect-video md:aspect-square md:w-48 shrink-0' : 'aspect-video'}`}>
-        <OptimizedImage
-          src={project.thumbnail}
-          alt={project.title}
-          className="w-full h-full object-cover transition-transform duration-500"
-          style={{
-            transform: isHovered
-              ? `scale(1.1) translateX(${mousePosition.rotateY * -2}px) translateY(${mousePosition.rotateX * 2}px)`
-              : 'scale(1)',
-          }}
-        />
+        {project.headerVideo ? (
+          <video
+            src={project.headerVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover transition-transform duration-500"
+            style={{
+              transform: isHovered
+                ? `scale(1.1) translateX(${mousePosition.rotateY * -2}px) translateY(${mousePosition.rotateX * 2}px)`
+                : 'scale(1)',
+            }}
+          />
+        ) : project.codeThumb ? (
+          <div
+            className="absolute inset-0 bg-gray-950 overflow-hidden"
+            style={{
+              backgroundImage: 'linear-gradient(rgba(16,185,129,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.07) 1px, transparent 1px)',
+              backgroundSize: '28px 28px',
+            }}
+          >
+            <pre
+              className="absolute inset-0 p-4 text-emerald-400/50 text-[10px] font-mono leading-relaxed overflow-hidden pointer-events-none select-none transition-transform duration-500"
+              style={{
+                transform: isHovered
+                  ? `scale(1.06) translateX(${mousePosition.rotateY * -1}px) translateY(${mousePosition.rotateX * 1}px)`
+                  : 'scale(1)',
+              }}
+            >
+              {project.codeThumb}
+            </pre>
+          </div>
+        ) : (
+          <OptimizedImage
+            src={project.thumbnail}
+            alt={project.title}
+            className="w-full h-full object-cover transition-transform duration-500"
+            style={{
+              transform: isHovered
+                ? `scale(1.1) translateX(${mousePosition.rotateY * -2}px) translateY(${mousePosition.rotateX * 2}px)`
+                : 'scale(1)',
+            }}
+          />
+        )}
 
         {/* Persistent Gradient for Contrast */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />

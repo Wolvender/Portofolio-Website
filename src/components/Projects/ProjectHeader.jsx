@@ -8,13 +8,36 @@ export default function ProjectHeader({ project }) {
 
   return (
     <div className="relative w-full h-[85vh] mb-12 overflow-hidden flex items-end">
-      {/* Parallax Background Image */}
+      {/* Parallax Background Image / Video */}
       <div className="absolute inset-0 z-0">
-        <img
-          src={project.thumbnail}
-          alt={project.title}
-          className="w-full h-full object-cover"
-        />
+        {project.headerVideo ? (
+          <video
+            src={project.headerVideo}
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-full object-cover"
+          />
+        ) : project.codeThumb ? (
+          <div
+            className="w-full h-full bg-gray-950"
+            style={{
+              backgroundImage: 'linear-gradient(rgba(16,185,129,0.06) 1px, transparent 1px), linear-gradient(90deg, rgba(16,185,129,0.06) 1px, transparent 1px)',
+              backgroundSize: '32px 32px',
+            }}
+          >
+            <pre className="w-full h-full p-12 text-emerald-400/35 text-sm md:text-base font-mono leading-relaxed overflow-hidden pointer-events-none select-none">
+              {project.codeThumb}
+            </pre>
+          </div>
+        ) : (
+          <img
+            src={project.thumbnail}
+            alt={project.title}
+            className="w-full h-full object-cover"
+          />
+        )}
         {/* Cinematic Overlays */}
         <div className="absolute inset-0 bg-black/40" /> {/* General dim */}
         <div className="absolute inset-0 bg-gradient-to-t from-(--bg) via-transparent to-transparent opacity-90" /> {/* Fade to bottom */}
