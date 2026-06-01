@@ -248,6 +248,20 @@ export default function Contact() {
 
         {/* Right Column: Nodes & Email */}
         <div className="lg:col-span-5 space-y-10">
+          {/* Profile Icon */}
+          <div className="flex items-center gap-5 p-5 bg-(--surface) border border-(--bordercolor) rounded-lg">
+            <img
+              src={siteConfig.aboutImage}
+              alt={siteConfig.name}
+              className="w-16 h-16 rounded-md object-contain flex-shrink-0"
+            />
+            <div className="font-mono">
+              <div className="text-xs text-(--muted) opacity-50 uppercase tracking-widest mb-1">OPERATOR_ID</div>
+              <div className="text-(--text) font-bold">{siteConfig.name}</div>
+              <div className="text-xs text-(--accent) opacity-70 mt-1 uppercase tracking-tighter">{siteConfig.role}</div>
+            </div>
+          </div>
+
           {/* Enhanced Email Node */}
           <div className="space-y-4">
              <div className="flex items-center gap-3">

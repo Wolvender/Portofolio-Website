@@ -2,6 +2,7 @@
   "projects": [
     {
       "id": "replay-platformer",
+      "codeLanguage": "csharp",
       "title": "Replay Platformer",
       "tagline": "A 3D platformer with tight movement mechanics and accessibility options.",
       "description": "A 3D platformer featuring tight movement mechanics and accessibility options. Playable with both controller and keyboard, including a web version for easy access.\n\nI thoroughly enjoyed developing this game, focusing heavily on game feel and visual polish to ensure the movement felt satisfying and responsive. Implementing the wall jump mechanics presented an interesting challenge, but it was rewarding to perfect.\n\nThis project sparked my passion for creating advanced movement systems, and I look forward to exploring more complex mechanics in future projects.",
@@ -57,6 +58,7 @@
     },
     {
       "id": "ai-agent-enemies",
+      "codeLanguage": "gdscript",
       "title": "AI Agent Enemies",
       "tagline": "A wave-based arena game featuring LLM-driven enemy AI.",
       "description": "A prototype wave game built in Godot, starring an enemy AI powered by the Groq API (LLM). The AI acts as an unhinged villain, evaluating its health, the distance to the player, and whether it's stuck. It uses this context to choose from an arsenal of tactical behaviors (Chase, Attack, Search, Retreat, Strafe, Seek Cover) and dynamically reacts to the player's movements. This was an exploration into creating non-deterministic, highly responsive enemies in a traditional action-combat loop.",
@@ -111,6 +113,7 @@
     },
     {
       "id": "vr-shooter",
+      "codeLanguage": "csharp",
       "title": "VR Shooter",
       "tagline": "A wave-based VR combat experience with modular AI enemies and satisfying feedback systems.",
       "description": "A VR shooter built in Unity featuring multiple enemy archetypes, a multi-phase boss, and a responsive combat feedback system. Each enemy type is built on a shared FSM base class, allowing for clean code reuse while enabling distinct behaviors — from exploding kamikazes to projectile-firing bartenders.\n\nThe project pushed me to think carefully about how enemy variety creates tactical depth without complexity, and how small feedback details like a damage vignette make hits feel impactful in VR.",
@@ -170,6 +173,7 @@
     },
     {
       "id": "ai-data-entry",
+      "codeLanguage": "python",
       "title": "AI Data Entry Agent",
       "tagline": "LLM-powered document extraction with multi-tenant architecture.",
       "description": "An intelligent document processing system built in Python that uses LLM agents to automatically extract structured data from unstructured files — invoices, inventory lists, ledgers. Users upload a document and the system classifies it, selects the right extraction schema, runs it through Groq's LLM API, validates the output, and returns a clean downloadable result.\n\nBuilt with a pluggable registry pattern so new document types can be added without touching core extraction logic. Includes multi-user authentication, per-user data isolation, subscription-tier rate limiting, and cost tracking — production-ready architecture, not a prototype.",

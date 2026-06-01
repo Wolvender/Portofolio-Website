@@ -94,9 +94,9 @@ export default function Header() {
                 <img
                   src={siteConfig.aboutImage}
                   alt={siteConfig.name}
-                  className={`relative rounded-full object-cover border-2 border-(--accent) transition-all duration-500 ${
+                  className={`relative rounded-md object-contain transition-all duration-500 ${
                     scrolled ? 'w-8 h-8' : 'w-12 h-12'
-                  } group-hover:border-(--accent-secondary)`}
+                  }`}
                 />
               </div>
               <span className={`font-bold text-(--text) transition-all duration-500 hidden lg:block ${

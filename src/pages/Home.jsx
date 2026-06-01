@@ -44,6 +44,19 @@ export default function Home() {
             <span className="text-(--accent) animate-pulse font-mono">></span> Building Experiences
           </h1>
 
+          {/* Availability badge */}
+          {siteConfig.availability && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 text-emerald-300 text-sm font-mono"
+            >
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              {siteConfig.availability}
+            </motion.div>
+          )}
+
           {/* Scroll Indicator */}
           <motion.div
             animate={{ y: [0, 10, 0] }}

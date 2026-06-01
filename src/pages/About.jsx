@@ -107,22 +107,23 @@ export default function About() {
               <Layers className="w-5 h-5 text-(--accent-secondary)" />
               <h3 className="font-bold uppercase tracking-wider text-sm">Passive_Abilities</h3>
             </div>
-            <ul className="space-y-4">
+            <ul className="space-y-3">
               {siteConfig.softSkills.map((skill) => (
-                <li key={skill} className="flex flex-col gap-1">
-                  <span className="text-xs font-mono text-(--muted) uppercase tracking-tighter">{skill}</span>
-                  <div className="h-1 w-full bg-black/30 rounded-full overflow-hidden">
-                    <motion.div 
-                      initial={{ width: 0 }}
-                      animate={{ width: "100%" }}
-                      transition={{ duration: 1.5, delay: 0.8 }}
-                      className="h-full bg-gradient-to-r from-(--accent) to-(--accent-secondary)"
-                    />
-                  </div>
+                <li key={skill} className="flex items-center gap-3">
+                  <span className="w-1.5 h-1.5 rounded-full bg-(--accent) shrink-0" />
+                  <span className="text-sm font-mono text-(--muted) uppercase tracking-tighter">{skill}</span>
                 </li>
               ))}
             </ul>
           </div>
+
+          {/* Availability */}
+          {siteConfig.availability && (
+            <div className="flex items-center gap-3 px-5 py-4 rounded-lg border border-emerald-500/30 bg-emerald-500/5">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              <span className="text-sm font-mono text-emerald-300">{siteConfig.availability}</span>
+            </div>
+          )}
 
           {/* Action: Download CV */}
           <a

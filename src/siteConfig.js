@@ -3,7 +3,7 @@ import { LinkedIn } from "./components/Icons/icons";
 export const siteConfig = {
   name: "Senna van Maren",
   role: "Creative Software Developer",
-  aboutImage: "https://api.dicebear.com/7.x/notionists/png?seed=senna",
+  aboutImage: "/Portofolio-Website/Imgs/Logo.png",
   cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
 
   socials: {
@@ -23,5 +23,7 @@ export const siteConfig = {
 
   softSkills: ["Creative Problem Solving", "Teamwork & Collaboration", "Iterative Design", "Communication", "Project Management"],
 
-  hardSkills: ["Unreal Engine", "Unity", "C#", "Python", "JavaScript", "Game Development"],
+  availability: "",
+
+  hardSkills: ["Unity", "Godot", "C#", "Python", "JavaScript", "Game Development"],
 };

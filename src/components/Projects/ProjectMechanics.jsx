@@ -4,8 +4,13 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import OptimizedImage from "../OptimizedImage";
 
-function MechanicCard({ mechanic }) {
+const FILE_EXT = { csharp: "CS", python: "PY", gdscript: "GD", javascript: "JS" };
+const HIGHLIGHT_LANG = { gdscript: "python" };
+
+function MechanicCard({ mechanic, language = "csharp" }) {
   const [activeTab, setActiveTab] = useState("code");
+  const highlightLang = HIGHLIGHT_LANG[language] || language;
+  const fileExt = FILE_EXT[language] || "CS";
 
   return (
     <div className="bg-(--surface) border border-(--bordercolor) rounded-xl overflow-hidden mb-12 shadow-sm hover:border-(--accent) transition-all duration-300">
@@ -64,11 +69,11 @@ function MechanicCard({ mechanic }) {
                     <div className="w-3 h-3 rounded-full bg-yellow-500/30" />
                     <div className="w-3 h-3 rounded-full bg-green-500/30" />
                   </div>
-                  <span className="text-[10px] text-white/30 font-mono tracking-[0.2em] font-bold">RAW_LOGIC.CS</span>
+                  <span className="text-[10px] text-white/30 font-mono tracking-[0.2em] font-bold">RAW_LOGIC.{fileExt}</span>
                 </div>
                 <div className="h-[400px] md:h-[500px] overflow-auto custom-scrollbar">
                   <SyntaxHighlighter
-                    language="csharp"
+                    language={highlightLang}
                     style={vscDarkPlus}
                     customStyle={{
                       margin: 0,
@@ -124,11 +129,6 @@ function MechanicCard({ mechanic }) {
                     />
                   )}
 
-                  {!mechanic.gif && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-black/60 backdrop-blur-sm opacity-0 group-hover/media:opacity-100 transition-opacity">
-                      <span className="text-white/60 text-xs text-center px-4 font-mono">Ready for .gif/.mp4 upload!<br />Point 'gif' in JSON to show action.</span>
-                    </div>
-                  )}
                 </div>
               </motion.div>
             )}
@@ -153,7 +153,7 @@ export default function ProjectMechanics({ project }) {
 
       <div className="space-y-12 max-w-7xl mx-auto pb-12">
         {project.mechanics.map((m, i) => (
-          <MechanicCard key={i} mechanic={m} />
+          <MechanicCard key={i} mechanic={m} language={project.codeLanguage || "csharp"} />
         ))}
       </div>
     </div>
