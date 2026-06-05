@@ -4,7 +4,7 @@ export const siteConfig = {
   name: "Senna van Maren",
   role: "Creative Software Developer",
   aboutImage: "/Portofolio-Website/Imgs/Logo.png",
-  cv: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+  cv: "/Portofolio-Website/CV_Senna_van_Maren.pdf",
 
   socials: {
     email: "senna.vanmaren@gmail.com",
