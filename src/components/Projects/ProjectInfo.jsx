@@ -56,15 +56,15 @@ export default function ProjectInfo({ project }) {
               )}
               {project.itch && (
                 <a href={project.itch} target="_blank" rel="noopener noreferrer"
-                  className="px-3 py-2 bg-(--accent) text-(--accent-text) rounded-lg
-                              hover:bg-(--accent-hover) text-sm transition-colors">
+                  className="px-3 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-85"
+                  style={{ backgroundColor: "var(--accent)", color: "var(--bg)" }}>
                   Itch.io
                 </a>
               )}
               {project.demo && (
                 <a href={project.demo} target="_blank" rel="noopener noreferrer"
-                  className="px-3 py-2 bg-(--accent) text-(--accent-text) rounded-lg
-                              hover:bg-(--accent-hover) text-sm transition-colors">
+                  className="px-3 py-2 rounded-lg text-sm font-semibold transition-opacity hover:opacity-85"
+                  style={{ backgroundColor: "var(--accent)", color: "var(--bg)" }}>
                   Live demo
                 </a>
               )}

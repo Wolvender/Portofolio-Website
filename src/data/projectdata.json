@@ -231,7 +231,7 @@
       ],
       "git": "https://github.com/Wolvender/Databot",
       "itch": "",
-      "demo": "https://smartledger.streamlit.app"
+      "demo": "https://dataentrybot.streamlit.app"
     }
   ]
 }
