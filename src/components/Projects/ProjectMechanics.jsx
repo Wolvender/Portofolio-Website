@@ -1,8 +1,17 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+// PrismLight with hand-registered languages instead of the full Prism build:
+// the default import bundles every language Prism supports (~700 kB of JS)
+import { PrismLight as SyntaxHighlighter } from "react-syntax-highlighter";
+import csharp from "react-syntax-highlighter/dist/esm/languages/prism/csharp";
+import python from "react-syntax-highlighter/dist/esm/languages/prism/python";
+import javascript from "react-syntax-highlighter/dist/esm/languages/prism/javascript";
 import { vscDarkPlus } from "react-syntax-highlighter/dist/esm/styles/prism";
 import OptimizedImage from "../OptimizedImage";
+
+SyntaxHighlighter.registerLanguage("csharp", csharp);
+SyntaxHighlighter.registerLanguage("python", python);
+SyntaxHighlighter.registerLanguage("javascript", javascript);
 
 const FILE_EXT = { csharp: "CS", python: "PY", gdscript: "GD", javascript: "JS" };
 const HIGHLIGHT_LANG = { gdscript: "python" };

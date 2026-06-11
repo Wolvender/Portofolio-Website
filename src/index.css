@@ -424,6 +424,38 @@ main::after {
   mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.8) 15%, rgba(0, 0, 0, 0.4) 40%, rgba(0, 0, 0, 0) 100%);
 }
 
+/* Promote the rain columns to their own GPU layers once, so the glyphs
+   and glows rasterize a single time and only the (cheap) transform moves */
+body::before,
+body::after,
+html::before,
+html::after,
+main::before,
+main::after {
+  will-change: transform, opacity;
+}
+
+/* Kill all decorative animation for users who asked for less motion */
+@media (prefers-reduced-motion: reduce) {
+
+  body::before,
+  body::after,
+  html::before,
+  html::after,
+  main::before,
+  main::after {
+    display: none;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
 /* Subtle scanline effect overlay */
 .scanlines {
   content: '';
@@ -439,7 +471,8 @@ main::after {
       transparent 2px);
   pointer-events: none;
   z-index: 1;
-  animation: scan 8s linear infinite;
+  /* Static scanlines: animating background-position repainted the whole
+     screen every frame for a 10px shift nobody can see */
 }
 
 /* ===== APPLE-INSPIRED PREMIUM STYLES ===== */
@@ -447,13 +480,12 @@ main::after {
 /* Glassmorphism Header */
 /* Glassmorphism Header */
 .glass-header {
-  background: rgba(2, 36, 28, 0.9);
-  /* More opaque for readability */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  /* No backdrop-filter: blurring the animated matrix rain behind the
+     header re-ran the blur every frame. At 96% opacity the blur was
+     invisible anyway. */
+  background: rgba(2, 36, 28, 0.96);
   border-bottom: 1px solid rgba(16, 185, 129, 0.2);
   box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
-  will-change: padding, background-color;
 }
 
 /* Nav Link Hover Effect */
@@ -703,18 +735,12 @@ select:focus {
   outline: none;
 }
 
-/* Matrix-specific enhancements */
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  animation: text-flicker 3s infinite;
-}
-
+/* Matrix-specific enhancements.
+   Static glow instead of infinite text-shadow animation: animating
+   text-shadow forces the browser to re-rasterize the text every frame,
+   which was a major source of page lag. The static glow looks the same. */
 h1 {
-  animation: neon-glow 2s ease-in-out infinite, text-flicker 3s infinite;
+  text-shadow: 0 0 12px rgba(16, 185, 129, 0.55), 0 0 24px rgba(16, 185, 129, 0.3);
 }
 
 /* Hero sections */
@@ -735,16 +761,16 @@ h1 {
   width: 100%;
   height: 100%;
   background: linear-gradient(45deg, transparent 30%, rgba(16, 185, 129, 0.05) 50%, transparent 70%);
-  animation: glitch 0.3s infinite;
+  /* No infinite glitch animation here: a 0.3s loop ran forever on every
+     hero section and kept the compositor busy even when idle */
   pointer-events: none;
 }
 
-/* Glowing accent text */
+/* Glowing accent text — static glow, see h1 comment */
 .accent-text,
 [class*="highlight"] {
   color: var(--accent-secondary);
   text-shadow: 0 0 20px rgba(6, 182, 212, 0.5);
-  animation: neon-glow 2s ease-in-out infinite;
 }
 
 /* Terminal-like code blocks */
