@@ -45,20 +45,27 @@ export default function ProjectInfo({ project }) {
           </ul>
 
           {/* Action buttons - shown if links exist */}
-          {(project.git || project.itch) && (
+          {(project.git || project.itch || project.demo) && (
             <div className="mt-4 flex gap-2 justify-start md:justify-end">
               {project.git && (
                 <a href={project.git} target="_blank" rel="noopener noreferrer"
-                  className="px-3 py-2 bg-(--surface) border border-(--bordercolor) rounded-lg 
+                  className="px-3 py-2 bg-(--surface) border border-(--bordercolor) rounded-lg
                               hover:border-(--accent) text-sm transition-colors">
                   GitHub
                 </a>
               )}
               {project.itch && (
                 <a href={project.itch} target="_blank" rel="noopener noreferrer"
-                  className="px-3 py-2 bg-(--accent) text-(--accent-text) rounded-lg 
+                  className="px-3 py-2 bg-(--accent) text-(--accent-text) rounded-lg
                               hover:bg-(--accent-hover) text-sm transition-colors">
                   Itch.io
+                </a>
+              )}
+              {project.demo && (
+                <a href={project.demo} target="_blank" rel="noopener noreferrer"
+                  className="px-3 py-2 bg-(--accent) text-(--accent-text) rounded-lg
+                              hover:bg-(--accent-hover) text-sm transition-colors">
+                  Live demo
                 </a>
               )}
             </div>
