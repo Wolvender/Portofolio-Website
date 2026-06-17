@@ -130,7 +130,7 @@ export default function About() {
             href={siteConfig.cv}
             target="_blank"
             rel="noopener noreferrer"
-            className="group relative flex items-center justify-center gap-3 w-full py-4 bg-(--accent) text-(--accent-text) font-bold uppercase tracking-widest rounded-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all"
+            className="group relative flex items-center justify-center gap-3 w-full py-4 bg-(--accent) text-black font-bold uppercase tracking-widest rounded-lg hover:shadow-[0_0_20px_rgba(16,185,129,0.4)] transition-all"
           >
             <Download className="w-5 h-5" />
             Initialize_Download (CV)
