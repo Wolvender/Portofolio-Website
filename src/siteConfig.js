@@ -9,7 +9,7 @@ export const siteConfig = {
   socials: {
     email: "senna.vanmaren@gmail.com",
     github: "https://github.com/Wolvender",
-    linkedin: "https://www.linkedin.com/in/sennavanmaren/",
+    linkedin: "https://www.linkedin.com/in/senna-van-maren-0530a1423/",
     itch: "https://wolv3nder.itch.io",
   },
 
