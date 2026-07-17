@@ -20,6 +20,8 @@ function MechanicCard({ mechanic, language = "csharp" }) {
   const [activeTab, setActiveTab] = useState("code");
   const highlightLang = HIGHLIGHT_LANG[language] || language;
   const fileExt = FILE_EXT[language] || "CS";
+  // Without a screenshot or gif there is nothing to preview — hide the tab switcher
+  const hasMedia = Boolean(mechanic.image || mechanic.gif);
 
   return (
     <div className="bg-(--surface) border border-(--bordercolor) rounded-xl overflow-hidden mb-12 shadow-sm hover:border-(--accent) transition-all duration-300">
@@ -36,6 +38,7 @@ function MechanicCard({ mechanic, language = "csharp" }) {
           </div>
 
           {/* Tab Selection */}
+          {hasMedia && (
           <div className="flex bg-black/40 p-1 rounded-xl shrink-0 self-start border border-white/5">
             {["code", "preview"].map((tab) => (
               <button
@@ -59,6 +62,7 @@ function MechanicCard({ mechanic, language = "csharp" }) {
               </button>
             ))}
           </div>
+          )}
         </div>
 
         <div className="relative">

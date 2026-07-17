@@ -24,6 +24,9 @@ export default function ProjectGallery({ project }) {
     setCurrentIndex((prev) => (prev - 1 + slides.length) % slides.length);
   };
 
+  // No media to show — skip the section entirely instead of an empty heading
+  if (slides.length === 0) return null;
+
   return (
     <div className="mb-4 mx-4">
       <h2 className="text-xl font-semibold text-(--text) mb-4">Gallery</h2>
@@ -55,7 +58,7 @@ export default function ProjectGallery({ project }) {
                 {slides[currentIndex].type === "image" && (
                   <OptimizedImage
                     src={slides[currentIndex].src}
-                    alt={`Slide ${currentIndex + 1} `}
+                    alt={`Slide ${currentIndex + 1}`}
                     className="w-full h-full object-cover cursor-pointer"
                     onClick={() => window.open(slides[currentIndex].src, "_blank")}
                   />
@@ -69,7 +72,8 @@ export default function ProjectGallery({ project }) {
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full 
+                aria-label="Previous slide"
+                className="absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full
                            bg-black/50 text-white hover:bg-black/70 transition-colors"
               >
                 <ChevronLeft className="w-6 h-6" />
@@ -77,7 +81,8 @@ export default function ProjectGallery({ project }) {
 
               <button
                 onClick={nextSlide}
-                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full 
+                aria-label="Next slide"
+                className="absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full
                            bg-black/50 text-white hover:bg-black/70 transition-colors"
               >
                 <ChevronRight className="w-6 h-6" />
@@ -89,6 +94,7 @@ export default function ProjectGallery({ project }) {
                   <button
                     key={idx}
                     onClick={() => setCurrentIndex(idx)}
+                    aria-label={`Go to slide ${idx + 1}`}
                     className={`w-2 h-2 rounded-full transition-all ${idx === currentIndex
                         ? "bg-white w-4"
                         : "bg-white/50 hover:bg-white/80"

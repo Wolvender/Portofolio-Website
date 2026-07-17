@@ -41,7 +41,7 @@ export default function Home() {
           <h1 className="text-4xl md:text-7xl font-bold text-(--text) mb-8 leading-tight tracking-tighter">
             Creative Software Developer
             <br />
-            <span className="text-(--accent) animate-pulse font-mono">></span> Building Experiences
+            <span className="text-(--accent) animate-pulse font-mono">&gt;</span> Building Experiences
           </h1>
 
           {/* Availability badge */}

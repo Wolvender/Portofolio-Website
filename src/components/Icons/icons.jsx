@@ -211,26 +211,3 @@ export function Check(props) {
   );
 }
 
-const icons = {
-  ArrowLeft,
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-  ChevronDown,
-  Download,
-  Users,
-  Tech,
-  Terminal,
-  Cpu,
-  Layers,
-  GitHub,
-  LinkedIn,
-  Itch,
-  Envelope,
-  Menu,
-  X,
-  Copy,
-  Check,
-};
-
-export default icons;

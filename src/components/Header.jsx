@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { siteConfig } from "../siteConfig";
 import { useState, useEffect } from "react";
-import { Menu, X } from "./Icons/icons";
+import { Menu, X, GitHub, LinkedIn } from "./Icons/icons";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function Header() {
@@ -23,10 +23,12 @@ export default function Header() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [scrolled]);
 
-  // Close mobile menu on route change
-  useEffect(() => {
+  // Close mobile menu on route change (adjust state during render, not in an effect)
+  const [prevPathname, setPrevPathname] = useState(location.pathname);
+  if (location.pathname !== prevPathname) {
+    setPrevPathname(location.pathname);
     setMobileMenuOpen(false);
-  }, [location]);
+  }
 
   const isActive = (path) => {
     if (path === "/") {
@@ -62,6 +64,7 @@ export default function Header() {
             <button
               className="lg:hidden text-(--text) p-1 hover:text-(--accent) transition-colors"
               onClick={() => setMobileMenuOpen(true)}
+              aria-label="Open menu"
             >
               <Menu className="w-6 h-6" />
             </button>
@@ -149,6 +152,7 @@ export default function Header() {
             <button
               className="absolute top-6 left-6 text-(--muted) hover:text-(--accent) p-2 border border-(--bordercolor) rounded-full"
               onClick={() => setMobileMenuOpen(false)}
+              aria-label="Close menu"
             >
               <X className="w-8 h-8" />
             </button>
@@ -170,8 +174,8 @@ export default function Header() {
             ))}
 
             <div className="flex gap-6 mt-8">
-              <a href={siteConfig.socials.github} target="_blank" className="text-(--muted) hover:text-(--accent)"><GitHub className="w-8 h-8" /></a>
-              <a href={siteConfig.socials.linkedin} target="_blank" className="text-(--muted) hover:text-(--accent)"><LinkedIn className="w-8 h-8" /></a>
+              <a href={siteConfig.socials.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="text-(--muted) hover:text-(--accent)"><GitHub className="w-8 h-8" /></a>
+              <a href={siteConfig.socials.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="text-(--muted) hover:text-(--accent)"><LinkedIn className="w-8 h-8" /></a>
             </div>
           </motion.div>
         )}
@@ -179,6 +183,3 @@ export default function Header() {
     </>
   );
 }
-
-// Ensure GitHub/LinkedIn are imported if used
-import { GitHub, LinkedIn } from "./Icons/icons";

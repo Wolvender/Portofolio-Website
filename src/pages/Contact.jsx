@@ -86,8 +86,8 @@ const TerminalContactForm = () => {
         animate={{ opacity: 1 }} 
         className="font-mono text-(--accent) p-6 border border-(--accent)/30 bg-black/20 rounded-lg"
       >
-        <div className="mb-2">> TRANSMISSION_SUCCESSFUL</div>
-        <div className="mb-4">> DATA_PACKET_QUEUED_FOR_REVIEW</div>
+        <div className="mb-2">&gt; TRANSMISSION_SUCCESSFUL</div>
+        <div className="mb-4">&gt; DATA_PACKET_QUEUED_FOR_REVIEW</div>
         <button 
           onClick={() => { setStep(0); setIsDone(false); setFormData({ name: "", email: "", message: "" }); }}
           className="text-xs border border-(--accent) px-2 py-1 hover:bg-(--accent) hover:text-black transition-colors"
@@ -116,7 +116,7 @@ const TerminalContactForm = () => {
         {/* Previous Steps */}
         {steps.slice(0, step).map((s, i) => (
           <div key={i}>
-            <span className="text-(--accent)">> {s.label}:</span>
+            <span className="text-(--accent)">&gt; {s.label}:</span>
             <span className="ml-2 text-(--text)">{formData[s.key]}</span>
           </div>
         ))}
@@ -124,7 +124,7 @@ const TerminalContactForm = () => {
         {/* Current Step */}
         {!isSubmitting && !error && (
           <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row sm:items-center gap-2">
-            <label className="text-(--accent) whitespace-nowrap">> {steps[step].label}:</label>
+            <label className="text-(--accent) whitespace-nowrap">&gt; {steps[step].label}:</label>
             <input
               ref={inputRef}
               type="text"
@@ -138,7 +138,7 @@ const TerminalContactForm = () => {
 
         {isSubmitting && (
           <div className="text-(--accent) animate-pulse">
-            > ENCRYPTING_AND_TRANSMITTING...
+            &gt; ENCRYPTING_AND_TRANSMITTING...
           </div>
         )}
 
@@ -160,17 +160,11 @@ const TerminalContactForm = () => {
 
 export default function Contact() {
   const [copied, setCopied] = useState(false);
-  const [status, setStatus] = useState("ONLINE");
-
-  useEffect(() => {
-    // Basic logic for Online/Idle based on hour (9 AM to 11 PM)
+  // Online between 8 AM and 11 PM, idle otherwise
+  const [status] = useState(() => {
     const hour = new Date().getHours();
-    if (hour >= 23 || hour < 8) {
-      setStatus("SYSTEM_IDLE");
-    } else {
-      setStatus("ONLINE");
-    }
-  }, []);
+    return hour >= 23 || hour < 8 ? "SYSTEM_IDLE" : "ONLINE";
+  });
 
   const copyEmail = () => {
     navigator.clipboard.writeText(siteConfig.socials.email);
@@ -241,7 +235,7 @@ export default function Contact() {
               SYSTEM_STATUS: {status}
             </div>
             <div className="text-xs opacity-30 uppercase tracking-tighter hidden sm:block">
-              Location: Netherlands [UTC+1]
+              Location: Netherlands [CET/CEST]
             </div>
           </div>
         </div>

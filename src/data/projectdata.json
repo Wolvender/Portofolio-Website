@@ -36,7 +36,7 @@
           "description": "Executing a jump while sliding applies an instantaneous impulse force away from the wall and upwards. A brief 'jump lock' prevents immediate redirection, ensuring a consistent arc.",
           "image": "/Portofolio-Website/Imgs/replay-code-walljump-2.png",
           "gif": "/Portofolio-Website/Imgs/wall-jump-preview.gif",
-          "code": "public void WallJump()\n{\n    if (isWallSliding)\n    {\n        // Apply force in opposite direction of wall\n        Vector2 force = new Vector2(-wallDir * wallJumpForce.x, wallJumpForce.y);\n        rb.velocity = Vector2.zero; // Reset momentum\n        rb.AddForce(force, ForceMode2D.Impulse);\n        \n        StartCoroutine(DisableMovement(0.15s)); // Brief lock\n    }\n}"
+          "code": "public void WallJump()\n{\n    if (isWallSliding)\n    {\n        // Apply force in opposite direction of wall\n        Vector2 force = new Vector2(-wallDir * wallJumpForce.x, wallJumpForce.y);\n        rb.velocity = Vector2.zero; // Reset momentum\n        rb.AddForce(force, ForceMode2D.Impulse);\n        \n        StartCoroutine(DisableMovement(0.15f)); // Brief lock\n    }\n}"
         },
         {
           "subtitle": "Enemy State Machine",

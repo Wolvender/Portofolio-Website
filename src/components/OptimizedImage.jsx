@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
-export default function OptimizedImage({ src, alt, className, priority = false }) {
+export default function OptimizedImage({ src, alt, className, priority = false, onClick, style }) {
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState(false);
 
@@ -9,7 +9,7 @@ export default function OptimizedImage({ src, alt, className, priority = false }
   const cleanSrc = src.startsWith("/") ? src : `/${src}`;
 
   return (
-    <div className={`relative overflow-hidden bg-black/20 ${className}`}>
+    <div className={`relative overflow-hidden bg-black/20 ${className}`} onClick={onClick}>
       {/* Loading Skeleton / Placeholder */}
       <AnimatePresence>
         {!isLoaded && !error && (
@@ -40,6 +40,7 @@ export default function OptimizedImage({ src, alt, className, priority = false }
         loading={priority ? "eager" : "lazy"}
         onLoad={() => setIsLoaded(true)}
         onError={() => setError(true)}
+        style={style}
         className={`w-full h-full object-cover transition-all duration-1000 ease-out ${
           isLoaded ? "opacity-100 scale-100 blur-0" : "opacity-0 scale-105 blur-md"
         }`}

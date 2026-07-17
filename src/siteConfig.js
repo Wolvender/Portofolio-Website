@@ -1,5 +1,3 @@
-import { LinkedIn } from "./components/Icons/icons";
-
 export const siteConfig = {
   name: "Senna van Maren",
   role: "Creative Software Developer",
