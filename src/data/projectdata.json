@@ -1,6 +1,70 @@
 {
   "projects": [
     {
+      "id": "mutants-of-agyr",
+      "codeLanguage": "csharp",
+      "title": "Mutants of Agyr",
+      "tagline": "A post-apocalyptic zombie FPS — shoot your way through the ruins of Agyr to find the serum that can save the world.",
+      "description": "Mutants of Agyr is a post-apocalyptic FPS built in Unity by a nine-person team — four developers and five artists. You are the last survivor, fighting through zombie-infested levels and completing quests to track down the serum that can rid the world of the mutants.\n\nI owned the moment-to-moment gunplay and the progression systems: procedural gun feel (weapon sway, spring-driven recoil, camera shake, tracers), aim-down-sights, an ammo and reload loop tied into the grid inventory, and a ScriptableObject-based quest system with HUD. Because the whole team worked in the same scenes daily, I also built a suite of one-click editor tools so any teammate could wire my systems into a scene in seconds.",
+      "thumbnail": "",
+      "headerVideo": "/Portofolio-Website/Videos/mutants-header.mp4",
+      "youtube": "https://www.youtube.com/embed/JCDUD_LdGnM",
+      "screenshots": [
+        "/Portofolio-Website/Imgs/mutants-quest-hud.png",
+        "/Portofolio-Website/Imgs/mutants-corridor.png",
+        "/Portofolio-Website/Imgs/mutants-questcomplete.png",
+        "/Portofolio-Website/Imgs/mutants-radiation.png"
+      ],
+      "tags": [
+        "Unity",
+        "C#",
+        "FPS",
+        "3D",
+        "Team Project"
+      ],
+      "projectRole": "Gameplay, Quest & Combat Programmer",
+      "timeline": "6 weeks",
+      "mechanics": [
+        {
+          "subtitle": "Spring-Driven Gun Feel",
+          "description": "Every shot raises a single onShotFired event that fans out to all the feedback at once: a recoil impulse on the arms rig, trauma-based camera shake, a camera pitch kick, muzzle flash VFX, and a pooled bullet tracer. The recoil itself is not an animation — it's a damped spring. The impulse is scaled by the spring's natural frequency so the designer-tuned kick values are the actual peak offsets, independent of spring stiffness, and the slightly underdamped settle bounce is what makes the gun read as heavy.",
+          "image": "",
+          "gif": "/Portofolio-Website/Videos/mutants-gunfeel.mp4",
+          "code": "private void OnShotFired(Vector3 start, Vector3 end)\n{\n    weaponSway?.TriggerRecoil(recoilStrength);\n    cameraShake?.TriggerShake(shakeTrauma);\n    playerMovement?.AddRecoil(recoilCameraKick);\n\n    muzzleFlash?.Play();\n    PlayFireAnimations();\n\n    var tracer = _tracerPool.Get();\n    tracer.Initialize(start, end, t => _tracerPool.Release(t));\n}\n\n// WeaponSway.cs — recoil is a damped spring, not an animation\npublic void TriggerRecoil(float strength = 1f)\n{\n    // Impulse scaled by the spring's natural frequency so recoilKickback\n    // and recoilRotKick are the peak offsets, independent of stiffness\n    float omega = Mathf.Sqrt(recoilSpring);\n    _recoilZVelocity -= recoilKickback * strength * omega;\n    _recoilPitchVelocity += recoilRotKick * strength * omega;\n}\n\nprivate void Update()\n{\n    // Spring-damper integration pulls the gun back to rest with a\n    // small settle bounce — underdamped on purpose, it reads as weight\n    _recoilZVelocity += (-recoilSpring * _recoilZOffset - recoilDamping * _recoilZVelocity) * dt;\n    _recoilZOffset += _recoilZVelocity * dt;\n    _recoilPitchVelocity += (-recoilSpring * _recoilPitchOffset - recoilDamping * _recoilPitchVelocity) * dt;\n    _recoilPitchOffset += _recoilPitchVelocity * dt;\n}"
+        },
+        {
+          "subtitle": "Auto-Aligning Aim Down Sights",
+          "description": "Hold right mouse to aim: the FOV blends from 90 to 65, weapon sway dampens, and movement slows — all driven by one 0-to-1 aim blend. The key trick is the scope point: the designer drops an empty GameObject on the gun's iron sight, and at startup the system computes the exact camera-space offset that brings that point to screen center. Adding ADS to a new weapon takes one empty transform — no per-gun offset tuning.",
+          "image": "",
+          "gif": "/Portofolio-Website/Videos/mutants-ads.mp4",
+          "code": "private void Start()\n{\n    // Place an empty at the gun's iron sight and the exact offset that\n    // brings it to camera center is computed once — no manual tuning\n    Vector3 offset = -playerCamera.transform.InverseTransformPoint(scopePoint.position);\n    weaponSway.SetAimOffset(offset);\n}\n\nprivate void Update()\n{\n    float target = aimAction.IsPressed() ? 1f : 0f;\n    _aimBlend = Mathf.Lerp(_aimBlend, target, aimBlendSpeed * Time.deltaTime);\n    Apply(_aimBlend);\n}\n\nprivate void Apply(float blend)\n{\n    playerCamera.fieldOfView = Mathf.Lerp(normalFov, aimFov, blend);\n\n    weaponSway?.SetAimBlend(blend);      // dampens sway while aiming\n    playerMovement?.SetAimBlend(blend);  // slows movement while aiming\n}"
+        },
+        {
+          "subtitle": "Inventory-Backed Ammo & Reload",
+          "description": "The gun's reserve ammo doesn't live on the gun — when a scene has the grid inventory, reserve ammo IS the ammo items in your backpack (one item = one full magazine), and reloading physically consumes an item. Scenes without an inventory fall back to a plain counter, so the same gun code runs everywhere. Every change fires a UnityEvent that keeps the ammo HUD in sync, and the reload triggers the arms and gun animators on the same frame so the two halves of the animation can never drift apart.",
+          "image": "",
+          "gif": "/Portofolio-Website/Videos/mutants-reload.mp4",
+          "code": "// Reserve ammo lives in the grid inventory when one is linked (quest\n// scenes) or in a plain counter elsewhere — same gun code either way.\npublic int ReserveAmmo => (inventoryGrid != null && ammoItemData != null)\n    ? inventoryGrid.CountAmmoOfType(ammoItemData) * BulletsPerMag\n    : reserveAmmo;\n\npublic bool TryConsume()\n{\n    if (currentInMag <= 0) return false;\n    currentInMag--;\n    onAmmoChanged.Invoke(currentInMag, ReserveAmmo);\n    return true;\n}\n\npublic void Reload()\n{\n    int reserve = ReserveAmmo;\n    if (IsFull || reserve <= 0) return;\n\n    if (inventoryGrid != null && ammoItemData != null)\n    {\n        // Each inventory item = 1 full mag: consume the item, fresh mag\n        inventoryGrid.ConsumeAmmoOfType(ammoItemData, 1);\n        currentInMag = magazineSize;\n    }\n    else\n    {\n        int loaded = Mathf.Min(magazineSize - currentInMag, reserve);\n        currentInMag += loaded;\n        reserveAmmo -= loaded;\n    }\n\n    onAmmoChanged.Invoke(currentInMag, ReserveAmmo);\n}"
+        },
+        {
+          "subtitle": "ScriptableObject Quest System",
+          "description": "Quests are ScriptableObject assets a designer can create straight from the Project window: a name, main-or-side flag, a list of objectives (kill enemies, collect items, or interact with world objects), guaranteed rewards, and a weighted random loot pool. The assets stay read-only at runtime — all progress counters live in the scene's quest manager, so quests reset cleanly with the scene and nothing ever mutates on disk. Enemies, pickups and interactables just report events; the manager routes them to whichever active quests care.",
+          "image": "",
+          "gif": "/Portofolio-Website/Videos/mutants-quest.mp4",
+          "code": "[CreateAssetMenu(menuName = \"Senna/Quest\")]\npublic class SennaQuestData : ScriptableObject\n{\n    public string questName;\n    public bool isMainQuest;\n    public SennaQuestObjective[] objectives;   // KillEnemy | CollectItem | Interact\n    public SennaFixedReward[] fixedRewards;    // guaranteed loot\n    public SennaRewardEntry[] rewardPool;      // weighted random loot\n}\n\n// Manager: assets stay read-only, per-quest progress lives here\npublic void ReportEnemyKilled()\n{\n    for (int q = 0; q < quests.Length; q++)\n    {\n        if (quests[q] == null || _questDone[q]) continue;\n\n        var objectives = quests[q].objectives;\n        for (int i = 0; i < objectives.Length; i++)\n        {\n            if (objectives[i].type != SennaObjectiveType.KillEnemy) continue;\n            if (_progress[q][i] >= objectives[i].requiredCount) continue;\n            _progress[q][i]++;\n        }\n\n        if (IsQuestComplete(q)) CompleteQuest(q);\n    }\n}\n\n// Side-mission loot: one weighted roll from the quest's pool\nprivate SennaRewardEntry PickReward(SennaRewardEntry[] pool)\n{\n    int total = 0;\n    foreach (var e in pool) total += Mathf.Max(1, e.weight);\n\n    int roll = Random.Range(0, total);\n    int cumulative = 0;\n    foreach (var e in pool)\n    {\n        cumulative += Mathf.Max(1, e.weight);\n        if (roll < cumulative) return e;\n    }\n    return pool[pool.Length - 1];\n}"
+        },
+        {
+          "subtitle": "One-Click Editor Tooling",
+          "description": "Nine people shared the same scenes, so 'follow this 12-step setup document' was never going to survive the week. Instead every system I built ships with an editor tool under Tools > Senna — Setup Quests Scene, Setup Aim System, Wire Death Screen, and a dozen more. Each one is idempotent (every step checks what already exists before creating anything), wires private [SerializeField] references through SerializedObject exactly like the inspector would, creates missing ScriptableObject assets on the spot, and registers Undo for everything. A teammate can rebuild a broken scene's wiring in seconds.",
+          "image": "",
+          "gif": "",
+          "code": "[MenuItem(\"Tools/Senna/Setup Quests Scene\")]\npublic static void SetupQuestsScene()\n{\n    // Idempotent: every step checks for existing objects first,\n    // so anyone on the team can run it safely at any time\n    var player   = FindOrInstantiate(\"MainPlayer\", PlayerPrefabPath, spawn);\n    var canvasGO = FindOrInstantiate(\"UICanvas\", CanvasPrefabPath, Vector3.zero);\n    var gsmGO    = FindOrInstantiate(\"GameStateManager\", GsmPrefabPath, Vector3.zero);\n\n    // Wire private [SerializeField] references the way the inspector would\n    var so = new SerializedObject(gsmGO.GetComponent<GameStateManager>());\n    so.FindProperty(\"startPanel\").objectReferenceValue = FindChild(canvasGO, \"StartPanel\");\n    so.FindProperty(\"deathPanel\").objectReferenceValue = FindChild(canvasGO, \"DeathPanel\");\n    so.FindProperty(\"playerMovement\").objectReferenceValue =\n        player.GetComponentInChildren<SennaPlayerMovement>(true);\n    so.ApplyModifiedProperties();\n\n    // Missing quest assets are created on the spot\n    var q1 = LoadOrCreateQuest(\"Q1_SituationReport\", q =>\n    {\n        q.questName   = \"Situation Report\";\n        q.isMainQuest = true;\n        q.objectives  = new[] { new SennaQuestObjective {\n            type = SennaObjectiveType.CollectItem,\n            targetItem = briefingItem, requiredCount = 1 } };\n    });\n\n    Undo.RegisterCreatedObjectUndo(player, \"Setup Quests Scene\");\n}"
+        }
+      ],
+      "git": "https://github.com/mmispot/P8Publish",
+      "itch": "https://mmispot.itch.io/mutants-of-agyr"
+    },
+    {
       "id": "replay-platformer",
       "codeLanguage": "csharp",
       "title": "Replay Platformer",

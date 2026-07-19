@@ -109,9 +109,10 @@ function MechanicCard({ mechanic, language = "csharp" }) {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.98 }}
                 transition={{ duration: 0.2 }}
-                className="grid grid-cols-1 md:grid-cols-2 gap-4 h-auto md:h-[500px]"
+                className={`grid grid-cols-1 gap-4 h-auto md:h-[500px] ${mechanic.image ? "md:grid-cols-2" : ""}`}
               >
-                {/* Code Screenshot */}
+                {/* Code Screenshot — only when the mechanic has one; video-only mechanics span full width */}
+                {mechanic.image && (
                 <div className="relative rounded-xl overflow-hidden border border-(--bordercolor) bg-black/20 group/media shadow-inner flex flex-col">
                   <div className="absolute top-3 left-3 z-10 text-[10px] font-bold text-white/40 uppercase tracking-widest bg-black/40 px-2 py-1 rounded">Visual Code</div>
                   <OptimizedImage
@@ -120,6 +121,7 @@ function MechanicCard({ mechanic, language = "csharp" }) {
                     className="w-full h-full object-contain p-4 group-hover/media:scale-105 transition-transform duration-700"
                   />
                 </div>
+                )}
 
                 {/* Result GIF / Video */}
                 <div className="relative rounded-xl overflow-hidden border border-(--bordercolor) bg-black/20 group/media shadow-inner">
